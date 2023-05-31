@@ -9,39 +9,65 @@
     text-decoration: none;
     box-sizing: border-box;
 }
+html,body{
+    height: 100%;
+}
 
 
 .side-nav-container{
+
     background-color: aqua;
+    float: left;
     width: 300px;
     height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
+
+
+
 }
 
 nav{
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 10rem;
     border: 1px solid black;
-    padding: 10px;
-    margin: 70px 20px 20px 20px;
-    height: 100%;
+
+    padding: 70px 10px;
+
+
+
 }
 
+.inbox{
+    display: flex;
+    height: 30px;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 5px;
+
+}
 
 
 .inbox button{
     display: flex;
     gap: 0.8rem;
-    background-color: antiquewhite;
-    width: 100%;
+    background-color: transparent;
+
     font-size: 20px;
     text-align: left;
-    padding: 3px;
+
 }
 
 i{
     font-size: 50px;
+}
+
+.my-projects{
+    height: 100%;
+}
+
+
+.my-projects{
+    border: 1px solid black;
 }
