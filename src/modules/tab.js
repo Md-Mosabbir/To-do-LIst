@@ -3,6 +3,7 @@ export class Tabs {
 
   static addTask (obj) {
     this._array.push(obj)
+
     console.log(this._array)
   }
 }
