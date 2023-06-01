@@ -1,26 +1,21 @@
 import Todo from './todo'
-const addingButton = document.createElement('button')
-addingButton.textContent = 'Hi'
+import { Tabs, Project } from './tab'
 
-document.querySelector('body').appendChild(addingButton)
+export function userInterface () {
+  const addingButton = document.createElement('button')
+  addingButton.textContent = 'Hi'
 
-addingButton.addEventListener('click', (e) => {
-  e.target = questions()
-})
+  document.querySelector('body').appendChild(addingButton)
 
-function questions () {
-  const name = prompt('name')
-  const game = prompt('name')
-  const shame = prompt('name')
-  const blame = prompt('name')
-  const work = new Todo(name, game, shame, blame)
+  addingButton.addEventListener('click', (e) => {
+    e.target = questions()
+  })
 
-  console.log(work)
-  pushArray(work)
-}
-const array = []
-
-function pushArray (w) {
-  array.push(w)
-  console.log(array)
+  function questions () {
+    const name = prompt('name')
+    const game = prompt('name')
+    const shame = prompt('name')
+    const blame = prompt('name')
+    const work = new Todo(name, game, shame, blame)
+  }
 }
