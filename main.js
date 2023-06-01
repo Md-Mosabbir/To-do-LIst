@@ -158,7 +158,29 @@ eval("\n\n/* istanbul ignore next  */\nfunction styleTagTransform(css, styleElem
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ \"./src/style.css\");\n/* harmony import */ var _fortawesome_fontawesome_free_js_all_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fortawesome/fontawesome-free/js/all.js */ \"./node_modules/@fortawesome/fontawesome-free/js/all.js\");\n/* harmony import */ var _fortawesome_fontawesome_free_js_all_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_fortawesome_fontawesome_free_js_all_js__WEBPACK_IMPORTED_MODULE_1__);\n\n\n\n\n//# sourceURL=webpack://to-do-list/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ \"./src/style.css\");\n/* harmony import */ var _fortawesome_fontawesome_free_js_all_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fortawesome/fontawesome-free/js/all.js */ \"./node_modules/@fortawesome/fontawesome-free/js/all.js\");\n/* harmony import */ var _fortawesome_fontawesome_free_js_all_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_fortawesome_fontawesome_free_js_all_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _modules_UI__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/UI */ \"./src/modules/UI.js\");\n\n\n\n\n\n//# sourceURL=webpack://to-do-list/./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/modules/UI.js":
+/*!***************************!*\
+  !*** ./src/modules/UI.js ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _todo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./todo */ \"./src/modules/todo.js\");\n\nconst addingButton = document.createElement('button')\naddingButton.textContent = 'Hi'\n\ndocument.querySelector('body').appendChild(addingButton)\n\naddingButton.addEventListener('click', (e) => {\n  e.target = questions()\n})\n\nfunction questions () {\n  let name = prompt('name')\n  let game = prompt('name')\n  let shame = prompt('name')\n  let blame = prompt('name')\n  let work = new _todo__WEBPACK_IMPORTED_MODULE_0__[\"default\"]( name, game, shame, blame)\n\n   console.log(work)\n    pushArray(work)\n}\nlet array = []\nfunction pushArray(w){\n    array.push(w)\n    console.log(array)\n\n}\n\n\n\n//# sourceURL=webpack://to-do-list/./src/modules/UI.js?");
+
+/***/ }),
+
+/***/ "./src/modules/todo.js":
+/*!*****************************!*\
+  !*** ./src/modules/todo.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Todo)\n/* harmony export */ });\n// creates To-do\n\nclass Todo {\n  constructor (name, description, dueDate, priority, status = 'unfinished') {\n    this.name = name\n    this.description = description\n    this.dueDate = dueDate\n    this.priority = priority\n    this.status = status\n  }\n\n  getDateFormatted () {\n    const day = this.dueDate.split('/')[0]\n    const month = this.dueDate.split('/')[1]\n    const year = this.dueDate.split('/')[2]\n    return `${month}/${day}/${year}`\n  }\n}\n\n\n//# sourceURL=webpack://to-do-list/./src/modules/todo.js?");
 
 /***/ }),
 
