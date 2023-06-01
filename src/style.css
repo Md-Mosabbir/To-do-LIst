@@ -71,3 +71,33 @@ i{
 .my-projects{
     border: 1px solid black;
 }
+
+#adding-button{
+    background-color: red;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 20px;
+    left: 325px;
+
+}
+
+#adding-button::before,
+#adding-button::after{
+    content: "";
+    position: absolute;
+    width: 30px;
+    background-color: black;
+    height: 4px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+#adding-button::before{
+    transform: translate(-50%,-50%) rotate(90deg);
+}
+#adding-button::after{
+    transform: translate(-50%,-50%) rotate(0deg);
+}

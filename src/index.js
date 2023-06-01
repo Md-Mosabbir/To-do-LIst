@@ -1,3 +1,6 @@
 import './style.css'
 import '@fortawesome/fontawesome-free/js/all.js'
-import './modules/UI'
+
+import { userInterface } from './modules/UI'
+
+userInterface()
