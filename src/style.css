@@ -102,3 +102,10 @@ i{
     transform: translate(-50%,-50%) rotate(0deg);
 }
 
+.indicator{
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    
+}

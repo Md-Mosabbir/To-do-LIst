@@ -1,3 +1,4 @@
+import {parse, format} from 'date-fns'
 import Todo from './todo'
 import { Tabs, Project } from './tab'
 
@@ -5,6 +6,9 @@ export class UserInterface {
   static divCreation () {
     const taskDiv = document.querySelector('.task')
     const containerDiv = document.createElement('div')
+
+    const priorityIndicatorSpan = document.createElement('span')
+
     const nameInput = document.createElement('input')
     nameInput.type = 'text'
     nameInput.placeholder = 'Name'
@@ -13,13 +17,31 @@ export class UserInterface {
     descriptionInput.type = 'text'
     descriptionInput.placeholder = 'Description'
 
-    const dueDateInput = document.createElement('input')
-    dueDateInput.type = 'number'
-    dueDateInput.placeholder = 'Due Date'
+    const dueDateInput = document.createElement('div')
 
-    const priorityInput = document.createElement('input')
-    priorityInput.type = 'text'
-    priorityInput.placeholder = 'Priority'
+
+    const priorityContainer = document.createElement('div')
+    priorityContainer.id = 'priorityContainer'
+
+    const selectElement = document.createElement('select')
+    selectElement.id = 'dropdown'
+
+    const option1 = document.createElement('option')
+    option1.value = 'Low'
+    option1.textContent = 'Low'
+    selectElement.appendChild(option1)
+
+    const option2 = document.createElement('option')
+    option2.value = 'Medium'
+    option2.textContent = 'Medium'
+    selectElement.appendChild(option2)
+
+    const option3 = document.createElement('option')
+    option3.value = 'High'
+    option3.textContent = 'High'
+    selectElement.appendChild(option3)
+
+    priorityContainer.appendChild(selectElement)
 
     const statusInput = document.createElement('input')
     statusInput.type = 'text'
@@ -27,18 +49,30 @@ export class UserInterface {
     const submitButton = document.createElement('button')
     submitButton.textContent = 'Submit'
     submitButton.addEventListener('click', () => {
-      const _task = new Todo(nameInput.value, descriptionInput.value, dueDateInput.value, priorityInput.value, statusInput.value)
+      const _task = new Todo(nameInput.value, descriptionInput.value, dueDateInput.value, selectElement.value, statusInput.value)
       Tabs.addTask(_task)
       submitButton.style.display = 'none'
       inbox.style.display = 'block'
+      priorityContainer.remove()
+      priorityIndicator()
     })
 
+    containerDiv.appendChild(priorityIndicatorSpan)
     containerDiv.appendChild(nameInput)
     containerDiv.appendChild(descriptionInput)
     containerDiv.appendChild(dueDateInput)
-    containerDiv.appendChild(priorityInput)
+    containerDiv.appendChild(priorityContainer)
     containerDiv.appendChild(submitButton)
     taskDiv.appendChild(containerDiv)
+
+    function priorityIndicator () {
+      priorityIndicatorSpan.classList.add('indicator')
+      if (selectElement.value === 'Low') {
+        priorityIndicatorSpan.style.backgroundColor = 'yellow'
+      } else if (selectElement.value === 'High') {
+        priorityIndicatorSpan.style.backgroundColor = 'red'
+      }
+    }
   }
 }
 
