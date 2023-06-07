@@ -1,3 +1,4 @@
+import Pikaday from 'pikaday'
 import { parse, format } from 'date-fns'
 import Todo from './todo'
 import { Tabs, Project } from './tab'
@@ -75,21 +76,6 @@ export class UserInterface {
         priorityIndicatorSpan.style.backgroundColor = 'red'
       }
     }
-
-    dueDateInput.addEventListener('change', () => {
-      const enteredDate = dueDateInput.value
-      const [day, month, year] = enteredDate.split('.')
-      const parsedDate = parse(`${year}-${month}-${day}T00:00:00`, 'yyyy-MM-dd\'T\'HH:mm:ss', new Date())
-
-      if (isNaN(parsedDate)) {
-        console.log('Invalid date format')
-        return
-      }
-
-      const formattedDate = format(parsedDate, 'do MMMM, yyyy')
-      console.log('Parsed date:', parsedDate)
-      console.log('Formatted date:', formattedDate)
-    })
   }
 }
 
