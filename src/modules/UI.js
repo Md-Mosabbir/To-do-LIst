@@ -1,4 +1,4 @@
-import Pikaday from 'pikaday'
+
 import { parse, format } from 'date-fns'
 import Todo from './todo'
 import { Tabs, Project } from './tab'
@@ -7,6 +7,21 @@ export class UserInterface {
   static divCreation () {
     const taskDiv = document.querySelector('.task')
     const containerDiv = document.createElement('div')
+
+    // Create checkbox element
+    const checkboxContainer = document.createElement('div')
+    checkboxContainer.classList.add('checkbox-container')
+    checkboxContainer.style.display = 'none'
+    const checkboxInput = document.createElement('input')
+    checkboxInput.type = 'checkbox'
+    checkboxInput.id = 'myCheckbox'
+
+    const checkboxLabel = document.createElement('label')
+    checkboxLabel.htmlFor = 'myCheckbox'
+
+    // Append checkbox elements to the container
+    checkboxContainer.appendChild(checkboxInput)
+    checkboxContainer.appendChild(checkboxLabel)
 
     const priorityIndicatorSpan = document.createElement('span')
 
@@ -58,8 +73,9 @@ export class UserInterface {
       inbox.style.display = 'block'
       priorityContainer.remove()
       priorityIndicator()
+      checkboxContainer.style.display = 'block'
     })
-
+    containerDiv.appendChild(checkboxContainer)
     containerDiv.appendChild(priorityIndicatorSpan)
     containerDiv.appendChild(nameInput)
     containerDiv.appendChild(descriptionInput)
@@ -76,6 +92,14 @@ export class UserInterface {
         priorityIndicatorSpan.style.backgroundColor = 'red'
       }
     }
+
+    checkboxInput.addEventListener('change', function () {
+      if (this.checked) {
+        containerDiv.remove()
+      } else {
+        console.log('25')
+      }
+    })
   }
 }
 
