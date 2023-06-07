@@ -1,4 +1,4 @@
-import {parse, format} from 'date-fns'
+import { parse, format } from 'date-fns'
 import Todo from './todo'
 import { Tabs, Project } from './tab'
 
@@ -17,8 +17,10 @@ export class UserInterface {
     descriptionInput.type = 'text'
     descriptionInput.placeholder = 'Description'
 
-    const dueDateInput = document.createElement('div')
-
+    const dueDateInput = document.createElement('input')
+    dueDateInput.type = 'text'
+    dueDateInput.placeholder = 'Due Date'
+    dueDateInput.id = 'dateInput'
 
     const priorityContainer = document.createElement('div')
     priorityContainer.id = 'priorityContainer'
@@ -73,6 +75,21 @@ export class UserInterface {
         priorityIndicatorSpan.style.backgroundColor = 'red'
       }
     }
+
+    dueDateInput.addEventListener('change', () => {
+      const enteredDate = dueDateInput.value
+      const [day, month, year] = enteredDate.split('.')
+      const parsedDate = parse(`${year}-${month}-${day}T00:00:00`, 'yyyy-MM-dd\'T\'HH:mm:ss', new Date())
+
+      if (isNaN(parsedDate)) {
+        console.log('Invalid date format')
+        return
+      }
+
+      const formattedDate = format(parsedDate, 'do MMMM, yyyy')
+      console.log('Parsed date:', parsedDate)
+      console.log('Formatted date:', formattedDate)
+    })
   }
 }
 
