@@ -1,111 +1,152 @@
-
-import { parse, format } from 'date-fns'
 import Todo from './todo'
-import { Tabs, Project } from './tab'
+import { inboxStorage } from './tab'
 
 export class UserInterface {
-  static divCreation () {
+  constructor () {
+    // Create the container div
+    this.containerDiv = document.createElement('div')
+
+    // Create the checkbox container
+    this.checkboxContainer = document.createElement('div')
+    this.checkboxContainer.classList.add('checkbox-container')
+    this.checkboxContainer.style.display = 'none'
+
+    // Create the checkbox input
+    this.checkboxInput = document.createElement('input')
+    this.checkboxInput.type = 'checkbox'
+    this.checkboxInput.id = 'myCheckbox'
+
+    // Create the checkbox label
+    this.checkboxLabel = document.createElement('label')
+    this.checkboxLabel.htmlFor = 'myCheckbox'
+
+    // Append the checkbox elements to the container
+    this.checkboxContainer.appendChild(this.checkboxInput)
+    this.checkboxContainer.appendChild(this.checkboxLabel)
+
+    // Create the priority indicator span
+    this.priorityIndicatorSpan = document.createElement('span')
+
+    // Create the name input
+    this.nameInput = document.createElement('input')
+    this.nameInput.type = 'text'
+    this.nameInput.placeholder = 'Name'
+
+    // Create the description input
+    this.descriptionInput = document.createElement('input')
+    this.descriptionInput.type = 'text'
+    this.descriptionInput.placeholder = 'Description'
+
+    // Create the due date input
+    this.dueDateInput = document.createElement('input')
+    this.dueDateInput.type = 'text'
+    this.dueDateInput.placeholder = 'Due Date'
+    this.dueDateInput.id = 'dateInput'
+
+    // Create the priority container
+    this.priorityContainer = document.createElement('div')
+    this.priorityContainer.id = 'priorityContainer'
+
+    // Create the select element
+    this.selectElement = document.createElement('select')
+    this.selectElement.id = 'dropdown'
+
+    // Create the priority options
+    const priorities = ['Low', 'Medium', 'High']
+    priorities.forEach(priority => {
+      const option = document.createElement('option')
+      option.value = priority
+      option.textContent = priority
+      this.selectElement.appendChild(option)
+    })
+
+    // Append the select element to the priority container
+    this.priorityContainer.appendChild(this.selectElement)
+
+    // Create the status input
+    this.statusInput = document.createElement('input')
+    this.statusInput.type = 'text'
+
+    // Create the submit button
+    this.submitButton = document.createElement('button')
+    this.submitButton.textContent = 'Submit'
+
+    // Create the delete button
+    this.cancelButton = document.createElement('button')
+    this.cancelButton.textContent = 'x'
+
+    // Bind the click event listener to the submit button
+    this.submitButton.addEventListener('click', this.handleSubmit.bind(this))
+
+    // Bind the click event to the cancel button
+    this.cancelButton.addEventListener('click', this.cancelFunction.bind(this))
+
+    // Append all the elements to the container div
+    this.containerDiv.appendChild(this.checkboxContainer)
+    this.containerDiv.appendChild(this.priorityIndicatorSpan)
+    this.containerDiv.appendChild(this.nameInput)
+    this.containerDiv.appendChild(this.descriptionInput)
+    this.containerDiv.appendChild(this.dueDateInput)
+    this.containerDiv.appendChild(this.priorityContainer)
+    this.containerDiv.appendChild(this.submitButton)
+    this.containerDiv.appendChild(this.cancelButton)
+
+    // Append the container div to the task div
     const taskDiv = document.querySelector('.task')
-    const containerDiv = document.createElement('div')
+    taskDiv.appendChild(this.containerDiv)
 
-    // Create checkbox element
-    const checkboxContainer = document.createElement('div')
-    checkboxContainer.classList.add('checkbox-container')
-    checkboxContainer.style.display = 'none'
-    const checkboxInput = document.createElement('input')
-    checkboxInput.type = 'checkbox'
-    checkboxInput.id = 'myCheckbox'
+    // Bind the change event listener to the checkbox input
+    this.checkboxInput.addEventListener('change', this.handleCheckboxChange.bind(this))
+  }
 
-    const checkboxLabel = document.createElement('label')
-    checkboxLabel.htmlFor = 'myCheckbox'
+  handleSubmit () {
+    const name = this.nameInput.value
+    const description = this.descriptionInput.value
+    const dueDate = this.dueDateInput.value
+    const priority = this.selectElement.value
+    const status = this.statusInput.value
 
-    // Append checkbox elements to the container
-    checkboxContainer.appendChild(checkboxInput)
-    checkboxContainer.appendChild(checkboxLabel)
+    const _task = new Todo(name, description, dueDate, priority, status)
+    inboxStorage.addTask(_task)
 
-    const priorityIndicatorSpan = document.createElement('span')
+    this.submitButton.style.display = 'none'
+    this.priorityContainer.remove()
+    this.priorityIndicator()
 
-    const nameInput = document.createElement('input')
-    nameInput.type = 'text'
-    nameInput.placeholder = 'Name'
+    this.checkboxContainer.style.display = 'block'
+    inbox.style.display = 'block'
+  }
 
-    const descriptionInput = document.createElement('input')
-    descriptionInput.type = 'text'
-    descriptionInput.placeholder = 'Description'
-
-    const dueDateInput = document.createElement('input')
-    dueDateInput.type = 'text'
-    dueDateInput.placeholder = 'Due Date'
-    dueDateInput.id = 'dateInput'
-
-    const priorityContainer = document.createElement('div')
-    priorityContainer.id = 'priorityContainer'
-
-    const selectElement = document.createElement('select')
-    selectElement.id = 'dropdown'
-
-    const option1 = document.createElement('option')
-    option1.value = 'Low'
-    option1.textContent = 'Low'
-    selectElement.appendChild(option1)
-
-    const option2 = document.createElement('option')
-    option2.value = 'Medium'
-    option2.textContent = 'Medium'
-    selectElement.appendChild(option2)
-
-    const option3 = document.createElement('option')
-    option3.value = 'High'
-    option3.textContent = 'High'
-    selectElement.appendChild(option3)
-
-    priorityContainer.appendChild(selectElement)
-
-    const statusInput = document.createElement('input')
-    statusInput.type = 'text'
-
-    const submitButton = document.createElement('button')
-    submitButton.textContent = 'Submit'
-    submitButton.addEventListener('click', () => {
-      const _task = new Todo(nameInput.value, descriptionInput.value, dueDateInput.value, selectElement.value, statusInput.value)
-      Tabs.addTask(_task)
-      submitButton.style.display = 'none'
-      inbox.style.display = 'block'
-      priorityContainer.remove()
-      priorityIndicator()
-      checkboxContainer.style.display = 'block'
-    })
-    containerDiv.appendChild(checkboxContainer)
-    containerDiv.appendChild(priorityIndicatorSpan)
-    containerDiv.appendChild(nameInput)
-    containerDiv.appendChild(descriptionInput)
-    containerDiv.appendChild(dueDateInput)
-    containerDiv.appendChild(priorityContainer)
-    containerDiv.appendChild(submitButton)
-    taskDiv.appendChild(containerDiv)
-
-    function priorityIndicator () {
-      priorityIndicatorSpan.classList.add('indicator')
-      if (selectElement.value === 'Low') {
-        priorityIndicatorSpan.style.backgroundColor = 'yellow'
-      } else if (selectElement.value === 'High') {
-        priorityIndicatorSpan.style.backgroundColor = 'red'
-      }
+  priorityIndicator () {
+    this.priorityIndicatorSpan.classList.add('indicator')
+    const selectedPriority = this.selectElement.value
+    if (selectedPriority === 'Low') {
+      this.priorityIndicatorSpan.style.backgroundColor = 'yellow'
+    } else if (selectedPriority === 'High') {
+      this.priorityIndicatorSpan.style.backgroundColor = 'red'
     }
+  }
 
-    checkboxInput.addEventListener('change', function () {
-      if (this.checked) {
-        containerDiv.remove()
-      } else {
-        console.log('25')
-      }
-    })
+  handleCheckboxChange () {
+    if (this.checkboxInput.checked) {
+      this.containerDiv.remove()
+    } else {
+      console.log('Checkbox unchecked')
+    }
+  }
+
+  cancelFunction () {
+    this.containerDiv.remove()
+    inboxStorage.removeTask()
+    inbox.style.display = 'block'
   }
 }
 
 const inbox = document.getElementById('adding-button')
+
 inbox.addEventListener('click', (e) => {
   e.stopPropagation()
-  UserInterface.divCreation()
+  // eslint-disable-next-line no-unused-vars
+  const ui = new UserInterface() // Create an instance of UserInterface
   inbox.style.display = 'none'
 })
