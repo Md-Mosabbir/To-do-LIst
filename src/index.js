@@ -3,7 +3,8 @@ import '@fortawesome/fontawesome-free/js/all.js'
 
 import { UserInterface } from './modules/UI'
 
-(function () {
+// eslint-disable-next-line no-unused-vars
+export const inboxContainer = (function () {
   const inbox = document.getElementById('adding-button')
 
   inbox.addEventListener('click', (e) => {
@@ -12,4 +13,12 @@ import { UserInterface } from './modules/UI'
     const ui = new UserInterface() // Create an instance of UserInterface
     inbox.style.display = 'none'
   })
+  return {
+    displayBlock: function () {
+      inbox.style.display = 'block'
+    },
+    displayNone: function () {
+      inbox.style.display = 'none'
+    }
+  }
 })()

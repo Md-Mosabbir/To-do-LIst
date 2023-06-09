@@ -1,5 +1,6 @@
 import Todo from './todo'
 import { inboxStorage } from './tab'
+import { inboxContainer } from '..'
 
 export class UserInterface {
   constructor () {
@@ -31,11 +32,13 @@ export class UserInterface {
     this.nameInput = document.createElement('input')
     this.nameInput.type = 'text'
     this.nameInput.placeholder = 'Name'
+    this.nameInput.id = 'name'
 
     // Create the description input
     this.descriptionInput = document.createElement('input')
     this.descriptionInput.type = 'text'
     this.descriptionInput.placeholder = 'Description'
+    this.descriptionInput.id = 'description'
 
     // Create the due date input
     this.dueDateInput = document.createElement('input')
@@ -115,7 +118,7 @@ export class UserInterface {
       this.priorityIndicator()
 
       this.checkboxContainer.style.display = 'block'
-      inbox.style.display = 'block'
+      inboxContainer.displayBlock()
       this.containerDiv.classList.remove('shake')
     } else {
       this.containerDiv.classList.add('shake')
@@ -146,6 +149,6 @@ export class UserInterface {
   cancelFunction () {
     this.containerDiv.remove()
     inboxStorage.removeTask()
-    inbox.style.display = 'block'
+    inboxContainer.displayNone()
   }
 }
