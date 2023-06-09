@@ -149,12 +149,3 @@ export class UserInterface {
     inbox.style.display = 'block'
   }
 }
-
-const inbox = document.getElementById('adding-button')
-
-inbox.addEventListener('click', (e) => {
-  e.stopPropagation()
-  // eslint-disable-next-line no-unused-vars
-  const ui = new UserInterface() // Create an instance of UserInterface
-  inbox.style.display = 'none'
-})
