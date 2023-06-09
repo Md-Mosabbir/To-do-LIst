@@ -10,7 +10,7 @@ export class Inbox {
   }
 
   removeTask () {
-    this.task.splice(0, 1)
+    this.task.pop()
   }
 
   finishTask () {
@@ -57,6 +57,7 @@ export const inboxStorage = (function () {
 })()
 
 export const projectStorage = (function () {
+  // eslint-disable-next-line no-unused-vars
   const projectArray = new Project()
 
   return {}
