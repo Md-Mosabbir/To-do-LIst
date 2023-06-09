@@ -1,6 +1,7 @@
 export class Inbox {
   constructor () {
     this.task = []
+    this.finished = []
   }
 
   addTask (obj) {
@@ -11,11 +12,18 @@ export class Inbox {
   removeTask () {
     this.task.splice(0, 1)
   }
+
+  finishTask () {
+    const element = this.task.pop()
+    this.finished.push(element)
+    console.log(this.finished)
+  }
 }
 
 export class Project {
   constructor () {
     this._projectArray = []
+    this._finished = []
   }
 
   addingProjects () {
@@ -41,6 +49,10 @@ export const inboxStorage = (function () {
     },
     removeTask: function () {
       inboxArray.removeTask()
+      console.log(inboxArray)
+    },
+    finishTask: function () {
+      inboxArray.finishTask()
       console.log(inboxArray)
     }
   }

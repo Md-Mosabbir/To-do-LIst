@@ -129,9 +129,9 @@ export class UserInterface {
 
   handleCheckboxChange () {
     if (this.checkboxInput.checked) {
+      // Remove from task array to finished
       this.containerDiv.remove()
-    } else {
-      console.log('Checkbox unchecked')
+      inboxStorage.finishTask()
     }
   }
 
