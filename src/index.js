@@ -28,12 +28,16 @@ export const activeClass = (function () {
   const inboxTaskNumber = document.querySelector('.notification-number')
 
   const inboxTab = document.querySelector('.inbox')
-  inboxTab.addEventListener('click', () => {
-    console.log('hi')
+  inboxTab.addEventListener('click', (e) => {
+    e.target.classList.add('active')
   })
   return {
     updateNumberOfInboxNotification: function () {
-      inboxTaskNumber.textContent = inboxStorage.getTask().length
+      if (inboxStorage.getTask().length === 0) {
+        inboxTaskNumber.textContent = ''
+      } else {
+        inboxTaskNumber.textContent = inboxStorage.getTask().length
+      }
     }
   }
 })()
