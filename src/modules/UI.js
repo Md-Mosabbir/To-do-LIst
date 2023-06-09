@@ -74,6 +74,8 @@ export default class UserInterface {
     this.submitButton = document.createElement('button')
     this.submitButton.textContent = 'Submit'
 
+
+
     // Create the delete button
     this.cancelButton = document.createElement('button')
     this.cancelButton.textContent = 'x'
@@ -100,6 +102,7 @@ export default class UserInterface {
 
     // Bind the change event listener to the checkbox input
     this.checkboxInput.addEventListener('change', this.handleCheckboxChange.bind(this))
+    this.submitted = false
   }
 
   handleSubmit () {
@@ -110,6 +113,7 @@ export default class UserInterface {
     const status = this.statusInput.value
 
     if (name !== '' && dueDate !== '') {
+      this.submitted = true
       const _task = new Todo(name, description, dueDate, priority, status)
       inboxStorage.addTask(_task)
       activeClass.updateNumberOfInboxNotification()
@@ -119,7 +123,7 @@ export default class UserInterface {
       this.submitButton.style.display = 'none'
       this.priorityContainer.remove()
       this.priorityIndicator()
-
+      this.cancelButton.style.display = 'block'
       this.checkboxContainer.style.display = 'block'
       inboxContainer.displayBlock()
       this.containerDiv.classList.remove('shake')
@@ -151,9 +155,14 @@ export default class UserInterface {
   }
 
   cancelFunction () {
-    this.containerDiv.remove()
-    inboxStorage.removeTask()
-    inboxContainer.displayNone()
-    activeClass.updateNumberOfInboxNotification()
+    if (this.submitted === false) {
+      this.containerDiv.remove()
+      inboxContainer.displayBlock()
+    } else if (this.submitted === true) {
+      this.containerDiv.remove()
+      inboxStorage.removeTask()
+      inboxContainer.displayBlock()
+      activeClass.updateNumberOfInboxNotification()
+    }
   }
 }
