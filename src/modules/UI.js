@@ -1,8 +1,8 @@
 import Todo from './todo'
 import { inboxStorage } from './tab'
-import { inboxContainer } from '..'
+import { activeClass, inboxContainer } from '..'
 
-export class UserInterface {
+export default class UserInterface {
   constructor () {
     // Create the container div
     this.containerDiv = document.createElement('div')
@@ -112,7 +112,10 @@ export class UserInterface {
     if (name !== '' && dueDate !== '') {
       const _task = new Todo(name, description, dueDate, priority, status)
       inboxStorage.addTask(_task)
+      activeClass.updateNumberOfInboxNotification()
+      // Checking for active Tab
 
+      // Takes Inbox and children of Projects
       this.submitButton.style.display = 'none'
       this.priorityContainer.remove()
       this.priorityIndicator()
@@ -143,6 +146,7 @@ export class UserInterface {
       // Remove from task array to finished
       this.containerDiv.remove()
       inboxStorage.finishTask()
+      activeClass.updateNumberOfInboxNotification()
     }
   }
 
@@ -150,5 +154,6 @@ export class UserInterface {
     this.containerDiv.remove()
     inboxStorage.removeTask()
     inboxContainer.displayNone()
+    activeClass.updateNumberOfInboxNotification()
   }
 }

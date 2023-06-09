@@ -49,11 +49,15 @@ export const inboxStorage = (function () {
     },
     removeTask: function () {
       inboxArray.removeTask()
-      console.log(inboxArray)
     },
     finishTask: function () {
       inboxArray.finishTask()
-      console.log(inboxArray)
     }
   }
+})()
+
+export const projectStorage = (function () {
+  const projectArray = new Project()
+
+  return {}
 })()
