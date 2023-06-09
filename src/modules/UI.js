@@ -106,15 +106,23 @@ export class UserInterface {
     const priority = this.selectElement.value
     const status = this.statusInput.value
 
-    const _task = new Todo(name, description, dueDate, priority, status)
-    inboxStorage.addTask(_task)
+    if (name !== '' && dueDate !== '') {
+      const _task = new Todo(name, description, dueDate, priority, status)
+      inboxStorage.addTask(_task)
 
-    this.submitButton.style.display = 'none'
-    this.priorityContainer.remove()
-    this.priorityIndicator()
+      this.submitButton.style.display = 'none'
+      this.priorityContainer.remove()
+      this.priorityIndicator()
 
-    this.checkboxContainer.style.display = 'block'
-    inbox.style.display = 'block'
+      this.checkboxContainer.style.display = 'block'
+      inbox.style.display = 'block'
+      this.containerDiv.classList.remove('shake')
+    } else {
+      this.containerDiv.classList.add('shake')
+      setTimeout(() => {
+        this.containerDiv.classList.remove('shake')
+      }, 420)
+    }
   }
 
   priorityIndicator () {
