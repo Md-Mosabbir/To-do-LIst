@@ -203,10 +203,10 @@ export const activeClass = (function () {
   return {
     updateNumberOfInboxNotification: function () {
       const inboxTaskNumber = document.querySelector('.notification-number')
-      if (inboxStorage.getTask().length === 0) {
+      if (inboxStorage.getTasks().length === 0) {
         inboxTaskNumber.textContent = ''
       } else {
-        inboxTaskNumber.textContent = inboxStorage.getTask().length
+        inboxTaskNumber.textContent = inboxStorage.getTasks().length
       }
     }
   }

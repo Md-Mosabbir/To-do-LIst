@@ -1,94 +1,76 @@
-export class Inbox {
+class TaskManager {
   constructor () {
-    this.task = []
-    this.finished = []
+    this.tasks = []
+    this.finishedTasks = []
   }
 
   addTask (obj) {
-    this.task.push(obj)
+    this.tasks.push(obj)
   }
 
   removeTask () {
-    this.task.pop()
+    this.tasks.pop()
   }
 
   finishTask () {
-    const element = this.task.pop()
-    this.finished.push(element)
+    const element = this.tasks.pop()
+    this.finishedTasks.push(element)
   }
 }
 
-export class Project {
+export class Inbox extends TaskManager {
+  // eslint-disable-next-line no-useless-constructor
   constructor () {
-    this._projectArray = []
-    this._finished = []
+    super()
+  }
+}
+
+export class Project extends TaskManager {
+  constructor () {
+    super()
+    this.projectArray = []
   }
 
-  addProjects () {
-    this._projectArray.push([])
+  addProject () {
+    this.projectArray.push([])
   }
 
   addTaskToProject (index, object) {
-    if (index >= 0 && index < this._projectArray.length) {
-      this._projectArray[index].push(object)
+    if (index >= 0 && index < this.projectArray.length) {
+      this.projectArray[index].push(object)
     }
   }
 
   removeProject () {
-    this._projectArray.pop()
+    this.projectArray.pop()
   }
 
-  removeTaskFromProject (index, object) {
-    if (index >= 0 && index < this._projectArray.length) {
-      this._projectArray[index].pop(object)
+  removeTaskFromProject (index) {
+    if (index >= 0 && index < this.projectArray.length) {
+      this.projectArray[index].pop()
     }
-  }
-
-  finishTask () {
-    const element = this.task.pop()
-    this.finished.push(element)
   }
 }
 
-export const inboxStorage = (function () {
-  const inboxArray = new Inbox()
+export const inboxStorage = (() => {
+  const inbox = new Inbox()
 
   return {
-    addTask: function (task) {
-      inboxArray.addTask(task)
-    },
-    getTask: function () {
-      return inboxArray.task
-    },
-    removeTask: function () {
-      inboxArray.removeTask()
-    },
-    finishTask: function () {
-      inboxArray.finishTask()
-    }
+    addTask: (task) => inbox.addTask(task),
+    getTasks: () => inbox.tasks,
+    removeTask: () => inbox.removeTask(),
+    finishTask: () => inbox.finishTask()
   }
 })()
 
-export const projectStorage = (function () {
-  // eslint-disable-next-line no-unused-vars
-  const projectArray = new Project()
+export const projectStorage = (() => {
+  const project = new Project()
 
   return {
-    addProject: function (task) {
-      projectStorage.addProject(task)
-    },
-    addTaskToProject (index, object) {
-      projectStorage.addTaskToProject(index, object)
-    },
-
-    removeTask: function () {
-      projectStorage.removeTask()
-    },
-    finishTask: function () {
-      projectStorage.finishTask()
-    },
-    removeTaskFromProject (index, object) {
-      projectStorage.removeTaskFromProject(index, object)
-    }
+    addProject: () => project.addProject(),
+    addTaskToProject: (index, object) => project.addTaskToProject(index, object),
+    removeTask: () => project.removeTask(),
+    finishTask: () => project.finishTask(),
+    removeTaskFromProject: (index) => project.removeTaskFromProject(index)
   }
 })()
