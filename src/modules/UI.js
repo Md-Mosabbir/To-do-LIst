@@ -110,11 +110,13 @@ export class UserInterface {
     const status = this.statusInput.value
 
     if (name !== '' && dueDate !== '') {
-      this.submitted = true
-      const _task = new Todo(name, description, dueDate, priority, status)
-      inboxStorage.addTask(_task)
-      activeClass.updateNumberOfInboxNotification()
       // Checking for active Tab
+      if (document.querySelector('.inbox').classList.contains('active')) {
+        this.submitted = true
+        const _task = new Todo(name, description, dueDate, priority, status)
+        inboxStorage.addTask(_task)
+        activeClass.updateNumberOfInboxNotification()
+      }
 
       // Takes Inbox and children of Projects
       this.submitButton.style.display = 'none'
@@ -168,8 +170,6 @@ export const inboxContainer = (function () {
   const addingTaskButton = document.getElementById('adding-button')
 
   addingTaskButton.addEventListener('click', (e) => {
-    e.stopPropagation()
-
     // eslint-disable-next-line no-unused-vars
     const ui = new UserInterface() // Create an instance of UserInterface
     addingTaskButton.style.display = 'none'
