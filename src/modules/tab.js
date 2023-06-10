@@ -25,16 +25,6 @@ export class Project {
     this._projectArray = []
     this._finished = []
   }
-
-  addingProjects () {
-    const _projects = []
-    this._projectArray.push(_projects)
-    return _projects
-  }
-
-  addingTask (_projects, obj) {
-    _projects.push(obj)
-  }
 }
 
 export const inboxStorage = (function () {
