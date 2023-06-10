@@ -1,8 +1,7 @@
 import Todo from './todo'
 import { inboxStorage } from './tab'
-import { activeClass, inboxContainer } from '..'
 
-export default class UserInterface {
+export class UserInterface {
   constructor () {
     // Create the container div
     this.containerDiv = document.createElement('div')
@@ -73,8 +72,6 @@ export default class UserInterface {
     // Create the submit button
     this.submitButton = document.createElement('button')
     this.submitButton.textContent = 'Submit'
-
-
 
     // Create the delete button
     this.cancelButton = document.createElement('button')
@@ -166,3 +163,51 @@ export default class UserInterface {
     }
   }
 }
+
+export const inboxContainer = (function () {
+  const addingTaskButton = document.getElementById('adding-button')
+
+  addingTaskButton.addEventListener('click', (e) => {
+    e.stopPropagation()
+
+    // eslint-disable-next-line no-unused-vars
+    const ui = new UserInterface() // Create an instance of UserInterface
+    addingTaskButton.style.display = 'none'
+  })
+  return {
+    displayBlock: function () {
+      addingTaskButton.style.display = 'block'
+    },
+    displayNone: function () {
+      addingTaskButton.style.display = 'none'
+    }
+  }
+})()
+
+export const activeClass = (function () {
+  // Getting all buttons in nav
+  const allButtonsOfNav = document.querySelectorAll('.set-active')
+
+  allButtonsOfNav.forEach((button) => {
+    button.addEventListener('click', (e) => {
+      e.stopPropagation()
+      for (let i = 0; i < allButtonsOfNav.length; i++) {
+        allButtonsOfNav[i].classList.remove('active')
+      }
+
+      e.target.classList.add('active')
+      inboxContainer.displayBlock()
+    })
+  })
+
+  return {
+    updateNumberOfInboxNotification: function () {
+      const inboxTaskNumber = document.querySelector('.notification-number')
+      if (inboxStorage.getTask().length === 0) {
+        inboxTaskNumber.textContent = ''
+      } else {
+        inboxTaskNumber.textContent = inboxStorage.getTask().length
+      }
+    }
+  }
+})()
