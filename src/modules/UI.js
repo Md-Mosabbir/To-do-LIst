@@ -1,5 +1,5 @@
 import Todo from './todo'
-import { inboxStorage } from './tab'
+import { inboxStorage, projectStorage } from './tab'
 
 export class UserInterface {
   constructor () {
@@ -115,8 +115,16 @@ export class UserInterface {
         this.submitted = true
         const _task = new Todo(name, description, dueDate, priority, status)
         inboxStorage.addTask(_task)
-        activeClass.updateNumberOfInboxNotification()
+        inboxManager.updateNumberOfInboxNotification()
       }
+      // else if (activeClass.checkForActiveClassHolder() === true) {
+      //   this.submitted = true
+      //   const _task = new Todo(name, description, dueDate, priority, status)
+      //   // inboxStorage.addTask(_task)
+
+      //   inboxManager.updateNumberOfInboxNotification()
+
+      // }
 
       // Takes Inbox and children of Projects
       this.submitButton.style.display = 'none'
@@ -149,7 +157,7 @@ export class UserInterface {
       // Remove from task array to finished
       this.containerDiv.remove()
       inboxStorage.finishTask()
-      activeClass.updateNumberOfInboxNotification()
+      inboxManager.updateNumberOfInboxNotification()
     }
   }
 
@@ -161,7 +169,7 @@ export class UserInterface {
       this.containerDiv.remove()
       inboxStorage.removeTask()
       inboxContainer.displayBlock()
-      activeClass.updateNumberOfInboxNotification()
+      inboxManager.updateNumberOfInboxNotification()
     }
   }
 }
@@ -184,6 +192,65 @@ export const inboxContainer = (function () {
   }
 })()
 
+export const inboxManager = (function () {
+  const inboxButton = document.querySelector('.inbox')
+
+  inboxButton.addEventListener('click', () => {
+    if (!inboxButton.classList.contains('active')) {
+      inboxButton.classList.add('active')
+      displayTasks(inboxStorage.getTasks()) // Display tasks from inboxStorage
+    }
+  })
+
+  function displayTasks(tasks) {
+    const taskDiv = document.querySelector('.task')
+    taskDiv.innerHTML = '' // Clear existing tasks
+
+    tasks.forEach((task) => {
+      const taskElement = document.createElement('div')
+      taskElement.classList.add('task-of-inbox') // Add appropriate class for styling
+
+      // Create elements to display task details
+      const nameElement = document.createElement('div')
+      nameElement.textContent = `Name: ${task.name}`
+
+      const descriptionElement = document.createElement('div')
+      descriptionElement.textContent = `Description: ${task.description}`
+
+      const dueDateElement = document.createElement('div')
+      dueDateElement.textContent = `Due Date: ${task.dueDate}`
+
+      const priorityElement = document.createElement('div')
+      priorityElement.textContent = `Priority: ${task.priority}`
+
+      const statusElement = document.createElement('div')
+      statusElement.textContent = `Status: ${task.status}`
+
+      // Append elements to task element
+      taskElement.appendChild(nameElement)
+      taskElement.appendChild(descriptionElement)
+      taskElement.appendChild(dueDateElement)
+      taskElement.appendChild(priorityElement)
+      taskElement.appendChild(statusElement)
+
+      // Append task element to task div
+      taskDiv.appendChild(taskElement)
+    })
+  }
+
+  return {
+    updateNumberOfInboxNotification: function () {
+      const inboxTaskNumber = document.querySelector('.notification-number')
+      if (inboxStorage.getTasks().length === 0) {
+        inboxTaskNumber.textContent = ''
+      } else {
+        inboxTaskNumber.textContent = inboxStorage.getTasks().length
+      }
+    }
+  }
+})();
+
+
 export const activeClass = (function () {
   // Getting all buttons in nav
   const allButtonsOfNav = document.querySelectorAll('.set-active')
@@ -201,13 +268,17 @@ export const activeClass = (function () {
   })
 
   return {
-    updateNumberOfInboxNotification: function () {
-      const inboxTaskNumber = document.querySelector('.notification-number')
-      if (inboxStorage.getTasks().length === 0) {
-        inboxTaskNumber.textContent = ''
-      } else {
-        inboxTaskNumber.textContent = inboxStorage.getTasks().length
-      }
+    checkForActiveClassHolder: function () {
+      const listOfAllProjectTask = document.querySelectorAll('.task-of-proj')
+      let isActive = false
+
+      listOfAllProjectTask.forEach((item) => {
+        if (item.classList.contains('active')) {
+          isActive = true
+        }
+      })
+
+      return isActive
     }
   }
 })()
