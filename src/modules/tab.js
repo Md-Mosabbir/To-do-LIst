@@ -28,16 +28,38 @@ export class Inbox extends TaskManager {
 export class Project extends TaskManager {
   constructor () {
     super()
-    this.projectArray = []
+    this.projectArray = [[[], [], []], [[], [], []], [[], [], []]]
   }
 
   addProject () {
     this.projectArray.push([])
   }
 
-  addTaskToProject (index, object) {
+  getProject (index) {
     if (index >= 0 && index < this.projectArray.length) {
-      this.projectArray[index].push(object)
+      return this.projectArray[index]
+    }
+  }
+
+  getTaskToProject (indexOfProject, indexOfTodo) {
+    if (
+      indexOfProject >= 0 &&
+      indexOfProject < this.projectArray.length &&
+      indexOfTodo >= 0 &&
+      indexOfTodo < this.projectArray[indexOfProject].length
+    ) {
+      return this.projectArray[indexOfProject][indexOfTodo]
+    }
+  }
+
+  addTaskToProject (indexOfProject, indexOfTodo, object) {
+    if (
+      indexOfProject >= 0 &&
+      indexOfProject < this.projectArray.length &&
+      indexOfTodo >= 0 &&
+      indexOfTodo < this.projectArray[indexOfProject].length
+    ) {
+      this.projectArray[indexOfProject][indexOfTodo].push(object)
     }
   }
 
@@ -45,9 +67,14 @@ export class Project extends TaskManager {
     this.projectArray.pop()
   }
 
-  removeTaskFromProject (index) {
-    if (index >= 0 && index < this.projectArray.length) {
-      this.projectArray[index].pop()
+  removeTaskFromProject (indexOfProject, indexOfTodo) {
+    if (
+      indexOfProject >= 0 &&
+      indexOfProject < this.projectArray.length &&
+      indexOfTodo >= 0 &&
+      indexOfTodo < this.projectArray[indexOfProject].length
+    ) {
+      this.projectArray[indexOfProject][indexOfTodo].pop()
     }
   }
 }
@@ -68,9 +95,14 @@ export const projectStorage = (() => {
 
   return {
     addProject: () => project.addProject(),
-    addTaskToProject: (index, object) => project.addTaskToProject(index, object),
+    addTaskToProject: (indexOfProject, indexOfTodo, object) =>
+      project.addTaskToProject(indexOfProject, indexOfTodo, object),
     removeTask: () => project.removeTask(),
     finishTask: () => project.finishTask(),
-    removeTaskFromProject: (index) => project.removeTaskFromProject(index)
+    removeTaskFromProject: (indexOfProject, indexOfTodo) =>
+      project.removeTaskFromProject(indexOfProject, indexOfTodo),
+    getProject: (index) => project.getProject(index),
+    getTaskToProject: (indexOfProject, indexOfTodo) =>
+      project.getTaskToProject(indexOfProject, indexOfTodo)
   }
 })()
