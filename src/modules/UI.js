@@ -3,137 +3,79 @@ import { inboxStorage, projectStorage } from './tab'
 
 export class UserInterface {
   constructor () {
-    // Create the container div
     this.containerDiv = document.createElement('div')
+    this.containerDiv.classList.add('task-of-inbox')
 
-    // Create the checkbox container
-    this.checkboxContainer = document.createElement('div')
-    this.checkboxContainer.classList.add('checkbox-container')
-    this.checkboxContainer.style.display = 'none'
+    this.createInput('Name', 'name')
+    this.createInput('Description', 'description')
+    this.createInput('Due Date', 'dateInput')
+    this.createPriorityDropdown()
+    this.createButton('Submit', this.handleSubmit.bind(this))
+    this.createButton('x', this.handleCancel.bind(this))
 
-    // Create the checkbox input
-    this.checkboxInput = document.createElement('input')
-    this.checkboxInput.type = 'checkbox'
-    this.checkboxInput.id = 'myCheckbox'
-
-    // Create the checkbox label
-    this.checkboxLabel = document.createElement('label')
-    this.checkboxLabel.htmlFor = 'myCheckbox'
-
-    // Append the checkbox elements to the container
-    this.checkboxContainer.appendChild(this.checkboxInput)
-    this.checkboxContainer.appendChild(this.checkboxLabel)
-
-    // Create the priority indicator span
-    this.priorityIndicatorSpan = document.createElement('span')
-
-    // Create the name input
-    this.nameInput = document.createElement('input')
-    this.nameInput.type = 'text'
-    this.nameInput.placeholder = 'Name'
-    this.nameInput.id = 'name'
-
-    // Create the description input
-    this.descriptionInput = document.createElement('input')
-    this.descriptionInput.type = 'text'
-    this.descriptionInput.placeholder = 'Description'
-    this.descriptionInput.id = 'description'
-
-    // Create the due date input
-    this.dueDateInput = document.createElement('input')
-    this.dueDateInput.type = 'text'
-    this.dueDateInput.placeholder = 'Due Date'
-    this.dueDateInput.id = 'dateInput'
-
-    // Create the priority container
-    this.priorityContainer = document.createElement('div')
-    this.priorityContainer.id = 'priorityContainer'
-
-    // Create the select element
-    this.selectElement = document.createElement('select')
-    this.selectElement.id = 'dropdown'
-
-    // Create the priority options
-    const priorities = ['Low', 'Medium', 'High']
-    priorities.forEach(priority => {
-      const option = document.createElement('option')
-      option.value = priority
-      option.textContent = priority
-      this.selectElement.appendChild(option)
-    })
-
-    // Append the select element to the priority container
-    this.priorityContainer.appendChild(this.selectElement)
-
-    // Create the status input
-    this.statusInput = document.createElement('input')
-    this.statusInput.type = 'text'
-
-    // Create the submit button
-    this.submitButton = document.createElement('button')
-    this.submitButton.textContent = 'Submit'
-
-    // Create the delete button
-    this.cancelButton = document.createElement('button')
-    this.cancelButton.textContent = 'x'
-
-    // Bind the click event listener to the submit button
-    this.submitButton.addEventListener('click', this.handleSubmit.bind(this))
-
-    // Bind the click event to the cancel button
-    this.cancelButton.addEventListener('click', this.cancelFunction.bind(this))
-
-    // Append all the elements to the container div
-    this.containerDiv.appendChild(this.checkboxContainer)
-    this.containerDiv.appendChild(this.priorityIndicatorSpan)
-    this.containerDiv.appendChild(this.nameInput)
-    this.containerDiv.appendChild(this.descriptionInput)
-    this.containerDiv.appendChild(this.dueDateInput)
-    this.containerDiv.appendChild(this.priorityContainer)
-    this.containerDiv.appendChild(this.submitButton)
-    this.containerDiv.appendChild(this.cancelButton)
-
-    // Append the container div to the task div
     const taskDiv = document.querySelector('.task')
     taskDiv.appendChild(this.containerDiv)
 
-    // Bind the change event listener to the checkbox input
-    this.checkboxInput.addEventListener('change', this.handleCheckboxChange.bind(this))
     this.submitted = false
   }
 
+  createInput (placeholder, id) {
+    const input = document.createElement('input')
+    input.type = 'text'
+    input.placeholder = placeholder
+    input.id = id
+    this.containerDiv.appendChild(input)
+  }
+
+  createPriorityDropdown () {
+    const priorities = ['Low', 'Medium', 'High']
+    const selectElement = document.createElement('select')
+    selectElement.id = 'dropdown'
+
+    priorities.forEach((priority) => {
+      const option = document.createElement('option')
+      option.value = priority
+      option.textContent = priority
+      selectElement.appendChild(option)
+    })
+
+    this.containerDiv.appendChild(selectElement)
+  }
+
+  createButton (text, clickHandler) {
+    const button = document.createElement('button')
+    button.textContent = text
+    button.addEventListener('click', clickHandler)
+    this.containerDiv.appendChild(button)
+  }
+
+  // --------------------------------
   handleSubmit () {
-    const name = this.nameInput.value
-    const description = this.descriptionInput.value
-    const dueDate = this.dueDateInput.value
-    const priority = this.selectElement.value
-    const status = this.statusInput.value
+    const name = this.getValue('name')
+    const description = this.getValue('description')
+    const dueDate = this.getValue('dateInput')
+    const priority = this.getValue('dropdown')
 
     if (name !== '' && dueDate !== '') {
-      // Checking for active Tab
-      if (document.querySelector('.inbox').classList.contains('active')) {
+      const inboxButton = document.querySelector('.inbox')
+
+      if (inboxButton.classList.contains('active')) {
         this.submitted = true
-        const _task = new Todo(name, description, dueDate, priority, status)
-        inboxStorage.addTask(_task)
+        const task = new Todo(name, description, dueDate, priority)
+        inboxStorage.addTask(task)
         inboxManager.updateNumberOfInboxNotification()
+
+        this.displayTaskDetails(task)
+        this.hideInputForm()
+      } else if (activeClass.checkForActiveClassHolder() === true) {
+        this.submitted = true
+        const task = new Todo(name, description, dueDate, priority)
+        const indexOfProject = activeClass.findActiveListIndex()
+        const indexOfTask = activeClass.findActiveTaskIndexInList()
+        projectStorage.addTaskToProject(indexOfProject, indexOfTask, task)
+        this.displayTaskDetails(task)
+        this.hideInputForm()
       }
-      // else if (activeClass.checkForActiveClassHolder() === true) {
-      //   this.submitted = true
-      //   const _task = new Todo(name, description, dueDate, priority, status)
-      //   // inboxStorage.addTask(_task)
-
-      //   inboxManager.updateNumberOfInboxNotification()
-
-      // }
-
-      // Takes Inbox and children of Projects
-      this.submitButton.style.display = 'none'
-      this.priorityContainer.remove()
-      this.priorityIndicator()
-      this.cancelButton.style.display = 'block'
-      this.checkboxContainer.style.display = 'block'
-      inboxContainer.displayBlock()
-      this.containerDiv.classList.remove('shake')
     } else {
       this.containerDiv.classList.add('shake')
       setTimeout(() => {
@@ -142,51 +84,62 @@ export class UserInterface {
     }
   }
 
-  priorityIndicator () {
-    this.priorityIndicatorSpan.classList.add('indicator')
-    const selectedPriority = this.selectElement.value
-    if (selectedPriority === 'Low') {
-      this.priorityIndicatorSpan.style.backgroundColor = 'yellow'
-    } else if (selectedPriority === 'High') {
-      this.priorityIndicatorSpan.style.backgroundColor = 'red'
-    }
+  getValue (id) {
+    const input = document.getElementById(id)
+    return input.value
   }
 
-  handleCheckboxChange () {
-    if (this.checkboxInput.checked) {
-      // Remove from task array to finished
-      this.containerDiv.remove()
-      inboxStorage.finishTask()
-      inboxManager.updateNumberOfInboxNotification()
-    }
+  displayTaskDetails (task) {
+    inboxContainer.displayBlock()
+    const taskElement = document.createElement('div')
+    taskElement.classList.add('task-details')
+
+    const taskDetails = [
+      { label: 'Name', value: task.name },
+      { label: 'Description', value: task.description },
+      { label: 'Due Date', value: task.dueDate },
+      { label: 'Priority', value: task.priority }
+    ]
+
+    taskDetails.forEach((detail) => {
+      const detailElement = document.createElement('div')
+      detailElement.textContent = `${detail.label}: ${detail.value}`
+      taskElement.appendChild(detailElement)
+    })
+
+    const taskDiv = document.querySelector('.task')
+    taskDiv.appendChild(taskElement)
   }
 
-  cancelFunction () {
-    if (this.submitted === false) {
-      this.containerDiv.remove()
-      inboxContainer.displayBlock()
-    } else if (this.submitted === true) {
-      this.containerDiv.remove()
+  hideInputForm () {
+    this.containerDiv.style.display = 'none'
+  }
+
+  handleCancel () {
+    if (this.submitted) {
       inboxStorage.removeTask()
-      inboxContainer.displayBlock()
       inboxManager.updateNumberOfInboxNotification()
     }
+
+    this.containerDiv.remove()
+    inboxContainer.displayBlock()
   }
 }
 
 export const inboxContainer = (function () {
   const addingTaskButton = document.getElementById('adding-button')
 
-  addingTaskButton.addEventListener('click', (e) => {
+  addingTaskButton.addEventListener('click', () => {
     // eslint-disable-next-line no-unused-vars
-    const ui = new UserInterface() // Create an instance of UserInterface
+    const ui = new UserInterface()
     addingTaskButton.style.display = 'none'
   })
+
   return {
-    displayBlock: function () {
+    displayBlock () {
       addingTaskButton.style.display = 'block'
     },
-    displayNone: function () {
+    displayNone () {
       addingTaskButton.style.display = 'none'
     }
   }
@@ -194,82 +147,101 @@ export const inboxContainer = (function () {
 
 export const inboxManager = (function () {
   const inboxButton = document.querySelector('.inbox')
+  function displayTaskDetails (task) {
+    inboxContainer.displayBlock()
+    const taskElement = document.createElement('div')
+    taskElement.classList.add('task-details')
+
+    const taskDetails = [
+      { label: 'Name', value: task.name },
+      { label: 'Description', value: task.description },
+      { label: 'Due Date', value: task.dueDate },
+      { label: 'Priority', value: task.priority }
+    ]
+
+    taskDetails.forEach((detail) => {
+      const detailElement = document.createElement('div')
+      detailElement.textContent = `${detail.label}: ${detail.value}`
+      taskElement.appendChild(detailElement)
+    })
+
+    const taskDiv = document.querySelector('.task')
+    taskDiv.appendChild(taskElement)
+  }
 
   inboxButton.addEventListener('click', () => {
+    const taskContainer = document.querySelector('.task')
+
+    const allButtonsOfNav = document.querySelectorAll('.set-active')
+    allButtonsOfNav.forEach((itm) => {
+      itm.classList.remove('active')
+    })
     if (!inboxButton.classList.contains('active')) {
       inboxButton.classList.add('active')
-      displayTasks(inboxStorage.getTasks()) // Display tasks from inboxStorage
+      taskContainer.innerHTML = ''
+      inboxStorage.getTasks().forEach((task) => {
+        displayTaskDetails(task)
+      })
     }
   })
-
-  function displayTasks(tasks) {
-    const taskDiv = document.querySelector('.task')
-    taskDiv.innerHTML = '' // Clear existing tasks
-
-    tasks.forEach((task) => {
-      const taskElement = document.createElement('div')
-      taskElement.classList.add('task-of-inbox') // Add appropriate class for styling
-
-      // Create elements to display task details
-      const nameElement = document.createElement('div')
-      nameElement.textContent = `Name: ${task.name}`
-
-      const descriptionElement = document.createElement('div')
-      descriptionElement.textContent = `Description: ${task.description}`
-
-      const dueDateElement = document.createElement('div')
-      dueDateElement.textContent = `Due Date: ${task.dueDate}`
-
-      const priorityElement = document.createElement('div')
-      priorityElement.textContent = `Priority: ${task.priority}`
-
-      const statusElement = document.createElement('div')
-      statusElement.textContent = `Status: ${task.status}`
-
-      // Append elements to task element
-      taskElement.appendChild(nameElement)
-      taskElement.appendChild(descriptionElement)
-      taskElement.appendChild(dueDateElement)
-      taskElement.appendChild(priorityElement)
-      taskElement.appendChild(statusElement)
-
-      // Append task element to task div
-      taskDiv.appendChild(taskElement)
-    })
-  }
 
   return {
     updateNumberOfInboxNotification: function () {
       const inboxTaskNumber = document.querySelector('.notification-number')
-      if (inboxStorage.getTasks().length === 0) {
-        inboxTaskNumber.textContent = ''
-      } else {
-        inboxTaskNumber.textContent = inboxStorage.getTasks().length
-      }
+      const taskCount = inboxStorage.getTasks().length
+      inboxTaskNumber.textContent = taskCount === 0 ? '' : taskCount
     }
   }
-})();
-
+})()
 
 export const activeClass = (function () {
-  // Getting all buttons in nav
   const allButtonsOfNav = document.querySelectorAll('.set-active')
+  const listOfAllProjectTask = document.querySelectorAll('.task-of-proj')
 
-  allButtonsOfNav.forEach((button) => {
-    button.addEventListener('click', (e) => {
-      e.stopPropagation()
+  function displayTaskDetails (task) {
+    inboxContainer.displayBlock()
+    const taskElement = document.createElement('div')
+    taskElement.classList.add('task-details')
+
+    const taskDetails = [
+      { label: 'Name', value: task.name },
+      { label: 'Description', value: task.description },
+      { label: 'Due Date', value: task.dueDate },
+      { label: 'Priority', value: task.priority }
+    ]
+
+    taskDetails.forEach((detail) => {
+      const detailElement = document.createElement('div')
+      detailElement.textContent = `${detail.label}: ${detail.value}`
+      taskElement.appendChild(detailElement)
+    })
+
+    const taskDiv = document.querySelector('.task')
+    taskDiv.appendChild(taskElement)
+  }
+
+  for (let i = 0; i < listOfAllProjectTask.length; i++) {
+    listOfAllProjectTask[i].addEventListener('click', handleClick)
+  }
+
+  function handleClick (e) {
+    if (!e.target.classList.contains('active')) {
       for (let i = 0; i < allButtonsOfNav.length; i++) {
         allButtonsOfNav[i].classList.remove('active')
       }
-
-      e.target.classList.add('active')
-      inboxContainer.displayBlock()
-    })
-  })
+      const clickedButton = e.target
+      clickedButton.classList.add('active')
+      const task = projectStorage.getTaskToProject(activeClass.findActiveListIndex(), activeClass.findActiveTaskIndexInList())
+      const taskContainer = document.querySelector('.task')
+      taskContainer.innerHTML = ''
+      task.forEach((itm) => {
+        displayTaskDetails(itm)
+      })
+    }
+  }
 
   return {
     checkForActiveClassHolder: function () {
-      const listOfAllProjectTask = document.querySelectorAll('.task-of-proj')
       let isActive = false
 
       listOfAllProjectTask.forEach((item) => {
@@ -279,6 +251,50 @@ export const activeClass = (function () {
       })
 
       return isActive
+    },
+    getIndexofProject: function () {
+      for (let i = 0; i < listOfAllProjectTask.length; i++) {
+        if (listOfAllProjectTask[i].classList.contains('active')) {
+          return i
+        }
+      }
+    },
+    findActiveListIndex: function () {
+      const lists = document.getElementsByClassName('list')
+
+      for (let i = 0; i < lists.length; i++) {
+        const list = lists[i]
+        const tasks = list.getElementsByClassName('task-of-proj')
+
+        for (let j = 0; j < tasks.length; j++) {
+          const task = tasks[j]
+
+          if (task.classList.contains('active')) {
+            return i // Return the index of the parent list
+          }
+        }
+      }
+
+      return -1 // Return -1 if no active task is found
+    },
+    findActiveTaskIndexInList: function () {
+      const lists = document.getElementsByClassName('list')
+
+      for (let i = 0; i < lists.length; i++) {
+        const list = lists[i]
+        const tasks = list.getElementsByClassName('task-of-proj')
+
+        for (let j = 0; j < tasks.length; j++) {
+          const task = tasks[j]
+
+          if (task.classList.contains('active')) {
+            return j // Return the index of the active task within the list
+          }
+        }
+      }
+
+      return -1 // Return -1 if no active task is found
     }
+
   }
 })()
