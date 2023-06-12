@@ -6,9 +6,10 @@ export class UserInterface {
     this.containerDiv = document.createElement('div')
     this.containerDiv.classList.add('task-of-inbox')
 
+    this.createCheckBox()
     this.createInput('Name', 'name')
     this.createInput('Description', 'description')
-    this.createInput('Due Date', 'dateInput')
+    this.createInput('Due Date', 'dateInput') // will be worked upon later
     this.createPriorityDropdown()
     this.createButton('Submit', this.handleSubmit.bind(this))
     this.createButton('x', this.handleCancel.bind(this))
@@ -25,6 +26,22 @@ export class UserInterface {
     input.placeholder = placeholder
     input.id = id
     this.containerDiv.appendChild(input)
+  }
+
+  createCheckBox () {
+    const checkboxContainer = document.createElement('div')
+    checkboxContainer.classList.add('checkbox-container')
+
+    const label = document.createElement('label')
+    label.htmlFor = 'checkBoxID'
+
+    const input = document.createElement('input')
+    input.id = 'checkBoxId'
+    input.type = 'checkbox'
+
+    checkboxContainer.appendChild(label)
+    checkboxContainer.appendChild(input)
+    this.containerDiv.append(checkboxContainer)
   }
 
   createPriorityDropdown () {
