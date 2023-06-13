@@ -1,18 +1,18 @@
 class TaskManager {
-  constructor () {
+  constructor() {
     this.tasks = []
     this.finishedTasks = []
   }
 
-  addTask (obj) {
+  addTask(obj) {
     this.tasks.push(obj)
   }
 
-  removeTask () {
+  removeTask() {
     this.tasks.pop()
   }
 
-  finishTask () {
+  finishTask() {
     const element = this.tasks.pop()
     this.finishedTasks.push(element)
   }
@@ -20,28 +20,34 @@ class TaskManager {
 
 export class Inbox extends TaskManager {
   // eslint-disable-next-line no-useless-constructor
-  constructor () {
+  constructor() {
     super()
   }
 }
 
 export class Project extends TaskManager {
-  constructor () {
+  constructor() {
     super()
-    this.projectArray = [[[], [], []], [[], [], []], [[], [], []]]
+    this.projectArray = [
+      [[], [], []],
+      [[], [], []],
+      [[], [], []],
+    ]
   }
 
-  addProject () {
+  addProject() {
     this.projectArray.push([])
   }
 
-  getProject (index) {
+  // eslint-disable-next-line consistent-return
+  getProject(index) {
     if (index >= 0 && index < this.projectArray.length) {
       return this.projectArray[index]
     }
   }
 
-  getTaskToProject (indexOfProject, indexOfTodo) {
+  // eslint-disable-next-line consistent-return
+  getTaskToProject(indexOfProject, indexOfTodo) {
     if (
       indexOfProject >= 0 &&
       indexOfProject < this.projectArray.length &&
@@ -52,7 +58,7 @@ export class Project extends TaskManager {
     }
   }
 
-  addTaskToProject (indexOfProject, indexOfTodo, object) {
+  addTaskToProject(indexOfProject, indexOfTodo, object) {
     if (
       indexOfProject >= 0 &&
       indexOfProject < this.projectArray.length &&
@@ -63,11 +69,11 @@ export class Project extends TaskManager {
     }
   }
 
-  removeProject () {
+  removeProject() {
     this.projectArray.pop()
   }
 
-  removeTaskFromProject (indexOfProject, indexOfTodo) {
+  removeTaskFromProject(indexOfProject, indexOfTodo) {
     if (
       indexOfProject >= 0 &&
       indexOfProject < this.projectArray.length &&
@@ -86,7 +92,7 @@ export const inboxStorage = (() => {
     addTask: (task) => inbox.addTask(task),
     getTasks: () => inbox.tasks,
     removeTask: () => inbox.removeTask(),
-    finishTask: () => inbox.finishTask()
+    finishTask: () => inbox.finishTask(),
   }
 })()
 
@@ -103,6 +109,6 @@ export const projectStorage = (() => {
       project.removeTaskFromProject(indexOfProject, indexOfTodo),
     getProject: (index) => project.getProject(index),
     getTaskToProject: (indexOfProject, indexOfTodo) =>
-      project.getTaskToProject(indexOfProject, indexOfTodo)
+      project.getTaskToProject(indexOfProject, indexOfTodo),
   }
 })()

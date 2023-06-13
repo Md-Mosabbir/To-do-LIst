@@ -1,7 +1,7 @@
 // creates To-do
 
 export default class Todo {
-  constructor (name, description, dueDate, priority, status = 'unfinished') {
+  constructor(name, description, dueDate, priority, status = 'unfinished') {
     this.name = name
     this.description = description
     this.dueDate = dueDate
@@ -9,7 +9,7 @@ export default class Todo {
     this.status = status
   }
 
-  getDateFormatted () {
+  getDateFormatted() {
     const day = this.dueDate.split('/')[0]
     const month = this.dueDate.split('/')[1]
     const year = this.dueDate.split('/')[2]
