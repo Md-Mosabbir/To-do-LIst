@@ -2,26 +2,40 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-use-before-define */
 /* eslint-disable import/prefer-default-export */
-import { Project, projectStorage } from "./tab"
+import { projectStorage } from './tab'
 
 // manage active class holder projects switching and creation
 
 
 export const  trackingActiveClass = (() => {
     const inboxTab = document.querySelector('.inbox')
-    const eligibleForActive = document.querySelectorAll('.set-active')
+    const project = document.querySelector('.list-and-tasks-container')
     const taskOfProject = document.querySelectorAll('.task-of-proj')
 
-    eligibleForActive.forEach((button) => {
-        button.addEventListener('click', addingActiveClass)
+    function removeActiveClass () {
+        inboxTab.classList.remove('active')
+        const buttons = project.querySelectorAll('.set-active')
+        buttons.forEach((button) => {
+          button.classList.remove('active')
+        })
+    }
+    inboxTab.addEventListener('click', () => {
+        removeActiveClass()
+        inboxTab.classList.add('active')
+
+    })
+    project.addEventListener('click', (e) => {
+        if (e.target.classList.contains('set-active')){
+            removeActiveClass()
+
+            
+            // Add the "Active" class to the clicked button
+            e.target.classList.add('active')
+
+        }
+
     })
 
-    function addingActiveClass (e) {
-        eligibleForActive.forEach(button => button.classList.remove('active'))
-
-        e.target.classList.add('active')
-
-    }
 
     return {
         inboxContainingActive() {
@@ -68,12 +82,14 @@ export class ProjectCreation {
         this.addProjectTask.style.display = 'none'
 
         this.projectNav.appendChild(this.titleH3)
-        this.projectList.appendChild(this.doneButton)
-        this.projectList.appendChild(this.displaySpan)
-        this.projectList.appendChild(this.addProjectTask)
+        this.projectNav.appendChild(this.doneButton)
+        this.projectNav.appendChild(this.displaySpan)
+        this.projectNav.appendChild(this.addProjectTask)
         this.projectList.appendChild(this.projectNav)
+
         document.querySelector('.list-and-tasks-container').appendChild(this.projectList)
         this.doneButton.addEventListener('click', this.submitProject.bind(this))
+        this.addProjectTask.addEventListener('click', this.createTaskToProject.bind(this))
         
     }
 
@@ -89,6 +105,51 @@ export class ProjectCreation {
 
 
 
+
+    }
+
+    createTaskToProject () {
+
+        this.taskOfProjectInputContainer = document.createElement('div')
+        this.taskOfProjectInput = document.createElement('input')
+        this.doneButton = document.createElement('button')
+        this.doneButton.textContent = 'Add'
+
+
+        this.doneButton.addEventListener('click', this.submitTaskToProject.bind(this))
+        
+
+        this.taskOfButton = document.createElement('button')
+        this.taskOfButton.style.display = 'none'
+        this.taskOfButton.classList.add('task-of-proj')
+        this.taskOfButton.classList.add('set-active')
+
+        
+        this.taskOfProjectInputContainer.appendChild(this.taskOfProjectInput)
+        this.taskOfProjectInputContainer.appendChild(this.doneButton)
+        this.taskOfProjectInputContainer.appendChild(this.taskOfButton)
+        this.projectList.appendChild(this.taskOfProjectInputContainer)
+        
+        
+
+       
+
+        
+
+
+
+    }
+
+    submitTaskToProject () {
+        this.taskOfButton.textContent =  this.taskOfProjectInput.value
+        this.taskOfButton.style.display = 'block'
+        this.taskOfProjectInput.style.display = 'none'
+        this.doneButton.style.display = 'none'
+        const getList = document.querySelectorAll('.list')
+         projectStorage.addTodoToProject(Array.from(getList).indexOf(this.projectList))
+
+       
+        
 
     }
 
