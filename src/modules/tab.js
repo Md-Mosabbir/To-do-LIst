@@ -1,4 +1,4 @@
-class TaskManager {
+export class TaskManager {
   constructor() {
     this.tasks = []
     this.finishedTasks = []
@@ -28,15 +28,22 @@ export class Inbox extends TaskManager {
 export class Project extends TaskManager {
   constructor() {
     super()
-    this.projectArray = [
-      [[], [], []],
-      [[], [], []],
-      [[], [], []],
-    ]
+    this.projectArray = []
   }
 
   addProject() {
     this.projectArray.push([])
+    console.log(this.projectArray)
+  }
+
+  addTodoToProject (index) {
+    if(index >= 0 && index < this.projectArray.length) {
+      this.projectArray[index].push([])
+      console.log(this.projectArray)
+
+    }
+    
+    
   }
 
   // eslint-disable-next-line consistent-return
@@ -85,6 +92,7 @@ export class Project extends TaskManager {
   }
 }
 
+
 export const inboxStorage = (() => {
   const inbox = new Inbox()
 
@@ -101,6 +109,7 @@ export const projectStorage = (() => {
 
   return {
     addProject: () => project.addProject(),
+    addTodoToProject: (index) => project.addTodoToProject(index),
     addTaskToProject: (indexOfProject, indexOfTodo, object) =>
       project.addTaskToProject(indexOfProject, indexOfTodo, object),
     removeTask: () => project.removeTask(),
