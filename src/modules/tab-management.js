@@ -1,3 +1,5 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable no-unreachable-loop */
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 /* eslint-disable no-use-before-define */
@@ -10,7 +12,6 @@ import { projectStorage } from './tab'
 export const  trackingActiveClass = (() => {
     const inboxTab = document.querySelector('.inbox')
     const project = document.querySelector('.list-and-tasks-container')
-    const taskOfProject = document.querySelectorAll('.task-of-proj')
 
     function removeActiveClass () {
         inboxTab.classList.remove('active')
@@ -22,15 +23,15 @@ export const  trackingActiveClass = (() => {
     inboxTab.addEventListener('click', () => {
         removeActiveClass()
         inboxTab.classList.add('active')
+        project.classList.remove('c-active')
 
     })
     project.addEventListener('click', (e) => {
         if (e.target.classList.contains('set-active')){
             removeActiveClass()
-
-            
             // Add the "Active" class to the clicked button
             e.target.classList.add('active')
+            project.classList.add('c-active')
 
         }
 
@@ -42,15 +43,38 @@ export const  trackingActiveClass = (() => {
             return inboxTab.classList.contains('active')
         },
         projectContainingActive () {
-            let isActive = false
-             taskOfProject.forEach((item) =>  {
-                if(item.classList.contains('active')) {
-                    isActive = true
+            return project.classList.contains('c-active')
+        },
+        getIndexOfActiveTodo () {
+            const lists = document.querySelectorAll('.list');
+            let listIndex = -1;
+          
+            for (let i = 0; i < lists.length; i++) {
+              if (lists[i].querySelector('.set-active.active')) {
+                listIndex = i;
+                break;
+              }
+            }
+          
+            return listIndex
 
-                }
-            })
-            return isActive 
-        }
+            
+        },
+        getButtonIndex() {
+            const lists = document.querySelectorAll('.list');
+          
+            for (let i = 0; i < lists.length; i++) {
+              const activeButton = lists[i].querySelector('.task-of-proj.set-active.active');
+              if (activeButton) {
+                const buttonIndex = Array.from(lists[i].querySelectorAll('.task-of-proj')).indexOf(activeButton);
+                return buttonIndex
+                 // Exit the loop after finding the active button
+              }
+              
+            }
+            
+          }
+          
     }
 
 })()
@@ -146,7 +170,7 @@ export class ProjectCreation {
         this.taskOfProjectInput.style.display = 'none'
         this.doneButton.style.display = 'none'
         const getList = document.querySelectorAll('.list')
-         projectStorage.addTodoToProject(Array.from(getList).indexOf(this.projectList))
+        projectStorage.addTodoToProject(Array.from(getList).indexOf(this.projectList))
 
        
         
