@@ -1,14 +1,18 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-plusplus */
 /* eslint-disable import/prefer-default-export */
 // Create the input filed and display task
+import Todo from './todo'
+import { trackingActiveClass } from './tab-management'
+import { inboxStorage } from './tab'
 
 export class CreateTaskInput {
   constructor () {
     this.containerDiv = document.createElement('div')
     this.createCheckbox()
-    this.createInput('name', 'nameInput')
-    this.createInput('description', 'description')
+    this.createName()
+    this.createDescription()
     this.createDueDate()
     this.createPriority()
     this.submitButton()
@@ -26,20 +30,33 @@ export class CreateTaskInput {
     this.checkbox = document.createElement('input')
     this.checkbox.type = 'checkbox';
     this.checkbox.name = 'checkbox'
+    this.checkbox.style.display = 'none'
     this.containerDiv.appendChild(this.checkbox)
+
     return this.checkbox
     
   }
 
 
-  createInput(name, id){
-    this.inputField = document.createElement('input')
-    this.inputField.type = 'text'
-    this.inputField.placeholder = name
-    this.inputField.name = name
-    this.inputField.id = id
-    this.containerDiv.appendChild(this.inputField)
-    return this.inputField
+  createName(){
+    this.inputFieldName = document.createElement('input')
+    this.inputFieldName.type = 'text'
+    this.inputFieldName.placeholder = 'name'
+    this.inputFieldName.name = 'name'
+    this.inputFieldName.id = 'name'
+    this.containerDiv.appendChild(this.inputFieldName)
+    return this.inputFieldName
+
+  }
+
+  createDescription(){
+    this.inputFieldDesc = document.createElement('input')
+    this.inputFieldDesc.type = 'text'
+    this.inputFieldDesc.placeholder = 'description'
+    this.inputFieldDesc.name = 'description'
+    this.inputFieldDesc.id = 'description'
+    this.containerDiv.appendChild(this.inputFieldDesc)
+    return this.inputFieldDesc
 
   }
 
@@ -99,10 +116,35 @@ export class CreateTaskInput {
     // check active class holder
 
     // add accordingly
-    if (this.getValue(nameInput )!== '' && this.getValue(DueDate)) {
-      console.log('yo')
+    if (trackingActiveClass.inboxContainingActive() === true){
+      if (this.getValue(this.inputFieldName )!== '' && this.getValue(this.inputDate) !== '') {
+        const name = this.getValue(this.inputFieldName)
+        const description = this.getValue(this.inputFieldDesc)
+        const dueDate = this.getValue(this.inputDate)
+        const priority = this.getValue(this.dropDown)
+        const status = this.checkbox.checked
+
+
+        const _task = new Todo(name, description, dueDate, priority, status)
+        inboxStorage.addTask(_task)
+        console.log(inboxStorage.getTasks())
+
+
+        new DisplayTask(inboxStorage.getTasks()).displayTasks()
+
+        this.containerDiv.style.display = 'none'
+        
+      }
 
     }
+    else if (trackingActiveClass.projectContainingActive() === true){
+      if (this.getValue(this.inputFieldName )!== '' && this.getValue(this.inputDate) !== '') {
+        console.log('Man wanna be radical, and take away life behavubg like an anikal')
+  
+      }
+      
+    }
+
   }
 }
 
@@ -114,8 +156,53 @@ document.getElementById('adding-button').addEventListener('click', () =>  new Cr
 
 // ----
 
-// export class DisplayTask {
-//   constructor () {
 
-//   }
-// }
+
+export class DisplayTask {
+  constructor(tasks) {
+    this.tasks = tasks
+  }
+
+  displayTasks() {
+    const container = document.querySelector('.task') // Assuming you have a <div> element with id 'task-container' in your HTML file.
+
+    // Clear the container before displaying the tasks
+    container.innerHTML = ''
+
+    this.tasks.forEach((task) => {
+      const card = document.createElement('div');
+      card.classList.add('task-card');
+
+      const nameElement = document.createElement('h3');
+      nameElement.classList.add('task-name');
+      nameElement.textContent = task.name;
+
+      const descriptionElement = document.createElement('p');
+      descriptionElement.classList.add('task-description');
+      descriptionElement.textContent = task.description;
+
+      const dueDateElement = document.createElement('p');
+      dueDateElement.classList.add('task-due-date');
+      dueDateElement.textContent = `Due Date: ${task.dueDate}`;
+
+      const priorityElement = document.createElement('div');
+      priorityElement.classList.add('task-priority');
+      priorityElement.classList.add(task.priority.toLowerCase());
+      
+      const statusElement = document.createElement('input');
+      statusElement.setAttribute('type', 'checkbox');
+      statusElement.checked = task.status;
+
+      card.appendChild(nameElement);
+      card.appendChild(descriptionElement);
+      card.appendChild(dueDateElement);
+      card.appendChild(priorityElement);
+      card.appendChild(statusElement);
+
+      container.appendChild(card)
+    })
+  }
+}
+
+// Usage:
+
