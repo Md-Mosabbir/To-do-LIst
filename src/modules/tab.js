@@ -15,6 +15,7 @@ export class TaskManager {
   finishTask() {
     const element = this.tasks.pop()
     this.finishedTasks.push(element)
+    console.log(this.finishedTasks)
   }
 }
 
@@ -36,14 +37,11 @@ export class Project extends TaskManager {
     console.log(this.projectArray)
   }
 
-  addTodoToProject (index) {
-    if(index >= 0 && index < this.projectArray.length) {
+  addTodoToProject(index) {
+    if (index >= 0 && index < this.projectArray.length) {
       this.projectArray[index].push([])
       console.log(this.projectArray)
-
     }
-    
-    
   }
 
   // eslint-disable-next-line consistent-return
@@ -76,6 +74,19 @@ export class Project extends TaskManager {
     }
   }
 
+  finishProjectTask(indexOfProject, indexOfTodo) {
+    if (
+      indexOfProject >= 0 &&
+      indexOfProject < this.projectArray.length &&
+      indexOfTodo >= 0 &&
+      indexOfTodo < this.projectArray[indexOfProject].length
+    ) {
+      const element = this.projectArray[indexOfProject][indexOfTodo].pop()
+      this.finishedTasks.push(element)
+      console.log(this.finishedTasks)
+    }
+  }
+
   removeProject() {
     this.projectArray.pop()
   }
@@ -91,7 +102,6 @@ export class Project extends TaskManager {
     }
   }
 }
-
 
 export const inboxStorage = (() => {
   const inbox = new Inbox()
@@ -113,7 +123,8 @@ export const projectStorage = (() => {
     addTaskToProject: (indexOfProject, indexOfTodo, object) =>
       project.addTaskToProject(indexOfProject, indexOfTodo, object),
     removeTask: () => project.removeTask(),
-    finishTask: () => project.finishTask(),
+    finishProjectTask: (indexOfProject, indexOfTodo) =>
+      project.finishProjectTask(indexOfProject, indexOfTodo),
     removeTaskFromProject: (indexOfProject, indexOfTodo) =>
       project.removeTaskFromProject(indexOfProject, indexOfTodo),
     getProject: (index) => project.getProject(index),
