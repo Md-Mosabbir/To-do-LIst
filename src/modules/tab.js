@@ -17,6 +17,10 @@ export class TaskManager {
     this.finishedTasks.push(element)
     console.log(this.finishedTasks)
   }
+
+  getFinishedTask() {
+    return this.finishedTasks
+  }
 }
 
 export class Inbox extends TaskManager {
@@ -87,6 +91,10 @@ export class Project extends TaskManager {
     }
   }
 
+  getFinishedProjectTask() {
+    return this.finishedTasks
+  }
+
   removeProject() {
     this.projectArray.pop()
   }
@@ -111,6 +119,7 @@ export const inboxStorage = (() => {
     getTasks: () => inbox.tasks,
     removeTask: () => inbox.removeTask(),
     finishTask: () => inbox.finishTask(),
+    getFinishedTask: () => inbox.getFinishedTask(),
   }
 })()
 
@@ -125,6 +134,7 @@ export const projectStorage = (() => {
     removeTask: () => project.removeTask(),
     finishProjectTask: (indexOfProject, indexOfTodo) =>
       project.finishProjectTask(indexOfProject, indexOfTodo),
+    getFinishedProjectTask: () => project.getFinishedProjectTask(),
     removeTaskFromProject: (indexOfProject, indexOfTodo) =>
       project.removeTaskFromProject(indexOfProject, indexOfTodo),
     getProject: (index) => project.getProject(index),
