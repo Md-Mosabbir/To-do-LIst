@@ -1,10 +1,14 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable import/no-cycle */
 /* eslint-disable no-return-assign */
 /* eslint-disable no-unreachable-loop */
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 /* eslint-disable no-use-before-define */
 /* eslint-disable import/prefer-default-export */
-import { projectStorage } from './tab'
+import { inboxStorage, projectStorage } from './tab'
+
+import { DisplayTask } from './UI'
 
 // manage active class holder projects switching and creation
 
@@ -23,7 +27,9 @@ export const  trackingActiveClass = (() => {
     inboxTab.addEventListener('click', () => {
         removeActiveClass()
         inboxTab.classList.add('active')
+        new DisplayTask(inboxStorage.getTasks()).displayTasks()
         project.classList.remove('c-active')
+        
 
     })
     project.addEventListener('click', (e) => {
@@ -32,6 +38,7 @@ export const  trackingActiveClass = (() => {
             // Add the "Active" class to the clicked button
             e.target.classList.add('active')
             project.classList.add('c-active')
+            new DisplayTask(projectStorage.getTaskToProject(trackingActiveClass.getIndexOfActiveTodo(),trackingActiveClass.getButtonIndex())).displayTasks()
 
         }
 
@@ -73,7 +80,8 @@ export const  trackingActiveClass = (() => {
               
             }
             
-          }
+        }
+        
           
     }
 
@@ -180,3 +188,4 @@ export class ProjectCreation {
 }
 
 document.querySelector('#adding-project').addEventListener('click', () => new ProjectCreation)
+
