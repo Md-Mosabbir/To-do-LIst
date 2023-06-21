@@ -1,3 +1,5 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-plusplus */
@@ -5,7 +7,7 @@
 // Create the input filed and display task
 import Todo from './todo'
 import { trackingActiveClass } from './tab-management'
-import { inboxStorage } from './tab'
+import { inboxStorage, projectStorage } from './tab'
 
 export class CreateTaskInput {
   constructor () {
@@ -99,11 +101,20 @@ export class CreateTaskInput {
     this.cancel = document.createElement('button')
     this.cancel.id = 'cancel'
     this.cancel.textContent = 'Cancel'
-    this.cancel.addEventListener('click', () => {console.log('cancel')} ) // later
+    this.cancel.addEventListener('click', () => {
+      this.removeContainer()
+      
+    } )
     this.containerDiv.appendChild(this.cancel)
+    
 
     return this.cancel
     
+  }
+
+  removeContainer() {
+    this.containerDiv.remove()
+    addingButton.style.display = 'block'
   }
 
   getValue (id) {
@@ -133,13 +144,32 @@ export class CreateTaskInput {
         new DisplayTask(inboxStorage.getTasks()).displayTasks()
 
         this.containerDiv.style.display = 'none'
+        addingButton.style.display = 'block'
         
       }
 
     }
     else if (trackingActiveClass.projectContainingActive() === true){
       if (this.getValue(this.inputFieldName )!== '' && this.getValue(this.inputDate) !== '') {
-        console.log('Man wanna be radical, and take away life behavubg like an anikal')
+        if (this.getValue(this.inputFieldName )!== '' && this.getValue(this.inputDate) !== '') {
+          const name = this.getValue(this.inputFieldName)
+          const description = this.getValue(this.inputFieldDesc)
+          const dueDate = this.getValue(this.inputDate)
+          const priority = this.getValue(this.dropDown)
+          const status = this.checkbox.checked
+  
+  
+          const _task = new Todo(name, description, dueDate, priority, status)
+          // ------------sdfadsffa-----
+          projectStorage.addTaskToProject(trackingActiveClass.getIndexOfActiveTodo(),trackingActiveClass.getButtonIndex(),_task)
+          new DisplayTask(projectStorage.getTaskToProject(trackingActiveClass.getIndexOfActiveTodo(),trackingActiveClass.getButtonIndex())).displayTasks()
+  
+
+  
+          this.containerDiv.style.display = 'none'
+          addingButton.style.display = 'block'
+          
+        }
   
       }
       
@@ -150,9 +180,7 @@ export class CreateTaskInput {
 
 
 
-// testing
 
-document.getElementById('adding-button').addEventListener('click', () =>  new CreateTaskInput())
 
 // ----
 
@@ -204,5 +232,17 @@ export class DisplayTask {
   }
 }
 
-// Usage:
 
+
+
+
+
+
+
+ 
+
+const addingButton = document.getElementById('adding-button')
+addingButton.addEventListener('click', () =>  {
+   new CreateTaskInput
+    addingButton.style.display = 'none'
+    })
