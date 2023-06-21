@@ -9,13 +9,15 @@
 /* eslint-disable import/prefer-default-export */
 import { inboxStorage, projectStorage } from './tab'
 
-import { DisplayTask, addingButton } from './UI'
+import { DisplayTask } from './UI'
+import { addingButton } from '..'
 
 // manage active class holder projects switching and creation
 
 export const trackingActiveClass = (() => {
   const inboxTab = document.querySelector('.inbox')
   const project = document.querySelector('.list-and-tasks-container')
+  const finish = document.querySelector('.finish')
 
   function removeActiveClass() {
     inboxTab.classList.remove('active')
@@ -43,6 +45,14 @@ export const trackingActiveClass = (() => {
           trackingActiveClass.getButtonIndex()
         )
       )
+    }
+  })
+
+  finish.addEventListener('click', () => {
+    if (inboxTab.classList.contains('active')) {
+      new DisplayTask(inboxStorage.getFinishedTask())
+    } else if (project.classList.contains('c-active')) {
+      new DisplayTask(projectStorage.getFinishedProjectTask())
     }
   })
 
@@ -164,7 +174,3 @@ export class ProjectCreation {
     )
   }
 }
-
-document
-  .querySelector('#adding-project')
-  .addEventListener('click', () => new ProjectCreation())
