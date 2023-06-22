@@ -19,6 +19,10 @@ export const trackingActiveClass = (() => {
   const project = document.querySelector('.list-and-tasks-container')
   const finish = document.querySelector('.finish')
 
+  const backButton = document.getElementById('back-button')
+
+  backButton.style.display = 'none'
+
   function removeActiveClass() {
     inboxTab.classList.remove('active')
     const buttons = project.querySelectorAll('.set-active')
@@ -49,10 +53,27 @@ export const trackingActiveClass = (() => {
   })
 
   finish.addEventListener('click', () => {
+    backButton.style.display = 'block'
+    addingButton.style.display = 'none'
     if (inboxTab.classList.contains('active')) {
       new DisplayTask(inboxStorage.getFinishedTask())
     } else if (project.classList.contains('c-active')) {
       new DisplayTask(projectStorage.getFinishedProjectTask())
+    }
+  })
+
+  backButton.addEventListener('click', () => {
+    backButton.style.display = 'none'
+    addingButton.style.display = 'block'
+    if (trackingActiveClass.inboxContainingActive()) {
+      new DisplayTask(inboxStorage.getTasks())
+    } else if (trackingActiveClass.projectContainingActive()) {
+      new DisplayTask(
+        projectStorage.getTaskToProject(
+          trackingActiveClass.getIndexOfActiveTodo(),
+          trackingActiveClass.getButtonIndex()
+        )
+      )
     }
   })
 
