@@ -99,6 +99,12 @@ export class Project extends TaskManager {
     this.projectArray.pop()
   }
 
+  removeTodoOfProject(activeList, todoOfIt) {
+    if (activeList >= 0 && activeList < this.projectArray.length)
+      this.projectArray[activeList].splice(todoOfIt, 1)
+    console.log(this.projectArray)
+  }
+
   removeTaskFromProject(indexOfProject, indexOfTodo) {
     if (
       indexOfProject >= 0 &&
@@ -140,5 +146,7 @@ export const projectStorage = (() => {
     getProject: (index) => project.getProject(index),
     getTaskToProject: (indexOfProject, indexOfTodo) =>
       project.getTaskToProject(indexOfProject, indexOfTodo),
+    removeTodoOfProject: (activeList) =>
+      project.removeTodoOfProject(activeList),
   }
 })()
