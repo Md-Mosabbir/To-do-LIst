@@ -29,7 +29,7 @@ nav {
   padding: 70px 10px;
 }
 
-.inbox,
+.inbox,.finish,
 .projects-button,
 .task-of-proj {
   display: flex;
@@ -41,7 +41,7 @@ nav {
   border-radius: 5px;
 }
 
-.inbox button,
+.inbox button, .finish button,
 .projects-button button,
 .task-of-proj {
   display: flex;
@@ -123,13 +123,6 @@ i {
   margin-right: 10px;
 }
 
-.task-card .priority.low {
-  background-color: yellow;
-}
-
-.task-card .priority.high {
-  background-color: red;
-}
 
 .task-card .description {
   flex-grow: 1;
@@ -170,4 +163,75 @@ i {
 
 .active {
   background-color: #fff;
+}
+
+
+
+
+
+
+
+
+
+.task-card {
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.task-name {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.task-description {
+  margin-bottom: 5px;
+}
+
+.task-due-date {
+  margin-bottom: 5px;
+}
+
+.task-priority {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.task-priority.low {
+  background-color: yellow;
+}
+
+.task-priority.medium {
+  background-color: orange;
+}
+
+.task-priority.high {
+  background-color: red;
+}
+
+.task-status {
+  margin-top: 10px;
+}
+
+/* Styling the checkbox */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #bbb;
+  border-radius: 4px;
+  outline: none;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #2196F3;
 }
