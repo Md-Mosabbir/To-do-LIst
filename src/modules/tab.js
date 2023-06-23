@@ -18,6 +18,10 @@ export class TaskManager {
     console.log(this.finishedTasks)
   }
 
+  removeFinishTask() {
+    this.finishedTasks.splice(0, this.finishedTasks.length)
+  }
+
   getFinishedTask() {
     return this.finishedTasks
   }
@@ -115,6 +119,10 @@ export class Project extends TaskManager {
       this.projectArray[indexOfProject][indexOfTodo].pop()
     }
   }
+
+  removeFinishProjectTask() {
+    this.finishedTasks.splice(0, this.finishedTasks.length)
+  }
 }
 
 export const inboxStorage = (() => {
@@ -126,6 +134,7 @@ export const inboxStorage = (() => {
     removeTask: () => inbox.removeTask(),
     finishTask: () => inbox.finishTask(),
     getFinishedTask: () => inbox.getFinishedTask(),
+    removeFinishTask: () => inbox.removeFinishTask(),
   }
 })()
 
@@ -148,5 +157,8 @@ export const projectStorage = (() => {
       project.getTaskToProject(indexOfProject, indexOfTodo),
     removeTodoOfProject: (activeList) =>
       project.removeTodoOfProject(activeList),
+    removeFinishProjectTask: () => {
+      project.removeFinishProjectTask()
+    },
   }
 })()
