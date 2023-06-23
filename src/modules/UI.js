@@ -226,10 +226,10 @@ export class DisplayTask {
       this.dueDateElement.textContent = `Due Date: ${task.dueDate}`
 
       this.deleteElement = document.createElement('button')
+      this.deleteElement.classList.add('task-delete')
       this.deleteElement.textContent = 'X'
-      this.deleterElement.classList.add('task-delete')
 
-      this.deleteElement.addEventListener(() => {
+      this.deleteElement.addEventListener('click', () => {
         if (trackingActiveClass.inboxContainingActive()) {
           inboxStorage.removeTask()
         } else if (trackingActiveClass.projectContainingActive()) {
