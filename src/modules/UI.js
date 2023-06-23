@@ -225,6 +225,23 @@ export class DisplayTask {
       this.dueDateElement.classList.add('task-due-date')
       this.dueDateElement.textContent = `Due Date: ${task.dueDate}`
 
+      this.deleteElement = document.createElement('button')
+      this.deleteElement.textContent = 'X'
+      this.deleterElement.classList.add('task-delete')
+
+      this.deleteElement.addEventListener(() => {
+        if (trackingActiveClass.inboxContainingActive()) {
+          inboxStorage.removeTask()
+        } else if (trackingActiveClass.projectContainingActive()) {
+          projectStorage.removeTaskFromProject(
+            trackingActiveClass.getIndexOfActiveTodo(),
+            trackingActiveClass.getButtonIndex()
+          )
+        }
+
+        card.remove()
+      })
+
       if (task.status === false) {
         card.appendChild(this.statusElement)
       }
@@ -232,6 +249,7 @@ export class DisplayTask {
       card.appendChild(this.nameElement)
       card.appendChild(this.descriptionElement)
       card.appendChild(this.dueDateElement)
+      card.appendChild(this.deleteElement)
 
       container.appendChild(card)
     })
