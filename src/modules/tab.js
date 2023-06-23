@@ -131,7 +131,7 @@ export const projectStorage = (() => {
     addTodoToProject: (index) => project.addTodoToProject(index),
     addTaskToProject: (indexOfProject, indexOfTodo, object) =>
       project.addTaskToProject(indexOfProject, indexOfTodo, object),
-    removeTask: () => project.removeTask(),
+    removeProject: () => project.removeProject(),
     finishProjectTask: (indexOfProject, indexOfTodo) =>
       project.finishProjectTask(indexOfProject, indexOfTodo),
     getFinishedProjectTask: () => project.getFinishedProjectTask(),
