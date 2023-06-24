@@ -15,21 +15,28 @@ import { addingButton } from '..'
 // manage active class holder projects switching and creation
 
 export const trackingActiveClass = (() => {
+  const task = document.querySelector('.task')
   const inboxTab = document.querySelector('.inbox')
   const project = document.querySelector('.list-and-tasks-container')
   const finish = document.querySelector('.finish')
   const backButton = document.getElementById('back-button')
-  const deleteTaskOfProject = document.getElementById(
-    'delete-project-task-button'
-  )
-  deleteTaskOfProject.style.display = 'none'
+  const deleteTaskAll = document.getElementById('delete-project-task-button')
+  deleteTaskAll.style.display = 'none'
   backButton.style.display = 'none'
 
-  deleteTaskOfProject.addEventListener('click', () => {
-    projectStorage.removeTodoOfProject(getIndexOfActiveTodo(), getButtonIndex())
-    document.querySelector('.task-of-proj.set-active.active').remove()
-
-    deleteTaskOfProject.style.display = 'none'
+  deleteTaskAll.addEventListener('click', () => {
+    if (inboxContainingActive()) {
+      inboxStorage.removeFinishTask()
+    } else if (projectContainingActive()) {
+      projectStorage.removeTodoOfProject(
+        getIndexOfActiveTodo(),
+        getButtonIndex()
+      )
+      projectStorage.removeFinishProjectTask()
+      document.querySelector('.task-of-proj.set-active.active').remove()
+    }
+    deleteTaskAll.style.display = 'none'
+    task.innerHTML = ''
   })
   function removeActiveClass() {
     addingButton.style.display = 'block'
@@ -45,7 +52,7 @@ export const trackingActiveClass = (() => {
     inboxTab.classList.add('active')
     new DisplayTask(inboxStorage.getTasks())
     project.classList.remove('c-active')
-    deleteTaskOfProject.style.display = 'none'
+    deleteTaskAll.style.display = 'none'
   })
   project.addEventListener('click', (e) => {
     if (e.target.classList.contains('set-active')) {
@@ -53,7 +60,7 @@ export const trackingActiveClass = (() => {
       // Add the "Active" class to the clicked button
       e.target.classList.add('active')
       project.classList.add('c-active')
-      deleteTaskOfProject.style.display = 'block'
+      deleteTaskAll.style.display = 'block'
       new DisplayTask(
         projectStorage.getTaskToProject(
           trackingActiveClass.getIndexOfActiveTodo(),
@@ -68,20 +75,22 @@ export const trackingActiveClass = (() => {
     addingButton.style.display = 'none'
 
     if (inboxTab.classList.contains('active')) {
+      deleteTaskAll.style.display = 'block'
       new DisplayTask(inboxStorage.getFinishedTask())
     } else if (project.classList.contains('c-active')) {
-      deleteTaskOfProject.style.display = 'none'
       new DisplayTask(projectStorage.getFinishedProjectTask())
+      deleteTaskAll.style.display = 'none'
     }
   })
 
   backButton.addEventListener('click', () => {
     backButton.style.display = 'none'
     addingButton.style.display = 'block'
+
     if (trackingActiveClass.inboxContainingActive()) {
       new DisplayTask(inboxStorage.getTasks())
     } else if (trackingActiveClass.projectContainingActive()) {
-      deleteTaskOfProject.style.display = 'block'
+      deleteTaskAll.style.display = 'block'
       new DisplayTask(
         projectStorage.getTaskToProject(
           trackingActiveClass.getIndexOfActiveTodo(),
@@ -197,13 +206,14 @@ export class ProjectCreation {
     this.removeProjectTask.style.display = 'block'
     this.deleteListButton.remove()
 
-    this.displaySpan.style.display = 'inline-block'
+    this.displaySpan.style.display = 'block'
     this.addProjectTask.style.display = 'inline-block'
     projectStorage.addProject()
   }
 
   createTaskToProject() {
     this.taskOfProjectInputContainer = document.createElement('div')
+    this.taskOfProjectInputContainer.classList.add('container-of-project-task')
     this.taskOfProjectInput = document.createElement('input')
     this.doneButton = document.createElement('button')
     this.doneButton.textContent = 'Add'
