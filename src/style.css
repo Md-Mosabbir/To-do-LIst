@@ -12,226 +12,162 @@ html,
 body {
   height: 100%;
 }
+:root {
+  --primary-color: #213363;     /* Background color of the side bar */
+  --secondary-color: #17594A;   /* Button color */
+  --accent-color: #FFD700;      /* Accent color for animations */
+}
+input {
+  outline: none;
+}
 
-.side-nav-container {
-  background-color: aqua;
+.side-nav-container{
+  background-color: darkblue;
+  width: 25%;
+  height: 100vh;
   float: left;
-  width: 300px;
-  height: 100%;
 }
 
 nav {
+  padding-top: 70px;
+  background-color: aliceblue;
+  width: 100%;
+  height: 100vh;
   display: flex;
+  gap: 5rem;
   flex-direction: column;
-  gap: 10rem;
-  border: 1px solid black;
-
-  padding: 70px 10px;
+  
 }
 
-.inbox,.finish,
-.projects-button,
-.task-of-proj {
-  display: flex;
-  height: 30px;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid black;
+.inbox , .projects-button { 
+  margin: 10px 0;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
+  background-color: #17594A;
+  width: 85%;
+  margin: 0 auto;
+
 }
 
-.inbox button, .finish button,
-.projects-button button,
-.task-of-proj {
+.project-nav input, .container-of-project-task input {
+  
+  height: 35px;
+  border-radius: 7px;
+  font-size: large;
+  
+
+}
+.project-nav button, .container-of-project-task button {
+  padding: 10px;
+  border-radius: 7px;
+}
+
+.inbox button, .projects-button button{
   display: flex;
-  gap: 0.8rem;
   background-color: transparent;
+  gap: 0.5rem;
+  font-size: larger;
 
-  font-size: 20px;
-  text-align: left;
 }
 
-i {
-  font-size: 50px;
+.projects-button {
+  background-color: #213363;
+  display: flex;
+  justify-content: space-between;
+  
 }
-
-.list-and-tasks-container {
-  height: 100%;
-}
-
-.list-and-tasks-container {
-  border: 1px solid black;
-}
-
-#adding-button {
-  background-color: red;
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  position: fixed;
-  bottom: 20px;
-  left: 325px;
-}
-
-#adding-button::before,
-#adding-button::after {
-  content: '';
-  position: absolute;
-  width: 30px;
-  background-color: black;
-  height: 4px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-#adding-button::before {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-#adding-button::after {
-  transform: translate(-50%, -50%) rotate(0deg);
-}
-
-.indicator {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-/* CSS for the task card */
-.task-card {
+.projects-button button {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+}
+.projects-button button:hover{
+  color: pink;
 }
 
-.task-card .checkbox {
-  flex-shrink: 0;
-  margin-right: 10px;
-}
+#adding-project {
+  font-size: 30px;
 
-.task-card .priority {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-
-.task-card .description {
-  flex-grow: 1;
-  margin-right: 10px;
-}
-
-.task-card .due-date {
-  margin-right: 10px;
-}
-
-.task-card .cancel-button {
-  flex-shrink: 0;
-  cursor: pointer;
-}
-
-/* Additional styles as needed */
-
-@keyframes shake {
-  0% {
-    transform: translateX(0);
-  }
-  20%,
-  80% {
-    transform: translateX(-5px);
-  }
-  40%,
-  60% {
-    transform: translateX(5px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-.shake {
-  animation: shake 0.3s ease-in-out;
 }
 
 .active {
-  background-color: #fff;
+  background-color: white;
 }
 
+.list-and-tasks-container{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 30px;
+  width: 90%;
+  
+}
 
+.my-projects{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 1.2rem;
+  align-items: center;
+}
 
+.list {
+  background-color: #17594A;
+  border-radius: 5px;
+  width: 95%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  /* justify-content: center; */
+  align-items: center;
+}
+.container-of-project-task{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  
+}
 
+.task-of-proj.set-active{
+  padding: 5px;
+  font-size: 25px;
+  text-align: left;
+  width: 100%;
+  border-radius: 7px;
+}
+.project-nav{
+    
+    
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.3rem;
+    width: 100%;
+}
 
+.project-nav input,.container-of-project-task input {
+  margin-right: auto;
+  width: 100%;
+  min-width: 70px;
+}
 
-
-
-
-.task-card {
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.container-of-project-task {
+  width: 100%;
+  display: flex;
+  justify-content: center;
   padding: 10px;
-  margin-bottom: 10px;
+  gap: 0.5rem;
+}
+.project-nav h3 {
+  margin-right: auto;
+  font-size: 25px;
 }
 
-.task-name {
-  font-size: 18px;
-  margin-bottom: 5px;
-}
-
-.task-description {
-  margin-bottom: 5px;
-}
-
-.task-due-date {
-  margin-bottom: 5px;
-}
-
-.task-priority {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 5px;
-}
-
-.task-priority.low {
-  background-color: yellow;
-}
-
-.task-priority.medium {
-  background-color: orange;
-}
-
-.task-priority.high {
-  background-color: red;
-}
-
-.task-status {
-  margin-top: 10px;
-}
-
-/* Styling the checkbox */
-input[type="checkbox"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #bbb;
-  border-radius: 4px;
-  outline: none;
-  transition: background-color 0.3s;
-  cursor: pointer;
-}
-
-input[type="checkbox"]:checked {
-  background-color: #2196F3;
+.project-nav button, .container-of-project-task button{
+  width: 45px;
+  border-radius: 10px;
 }
