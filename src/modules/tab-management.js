@@ -82,13 +82,13 @@ export const trackingActiveClass = (() => {
       deleteTaskAll.style.display = 'none'
     }
   })
-
   backButton.addEventListener('click', () => {
     backButton.style.display = 'none'
     addingButton.style.display = 'block'
 
     if (trackingActiveClass.inboxContainingActive()) {
       new DisplayTask(inboxStorage.getTasks())
+      deleteTaskAll.setAttribute('style', 'display: none')
     } else if (trackingActiveClass.projectContainingActive()) {
       deleteTaskAll.style.display = 'block'
       new DisplayTask(

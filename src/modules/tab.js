@@ -15,7 +15,6 @@ export class TaskManager {
   finishTask() {
     const element = this.tasks.pop()
     this.finishedTasks.push(element)
-    console.log(this.finishedTasks)
   }
 
   removeFinishTask() {
@@ -42,13 +41,11 @@ export class Project extends TaskManager {
 
   addProject() {
     this.projectArray.push([])
-    console.log(this.projectArray)
   }
 
   addTodoToProject(index) {
     if (index >= 0 && index < this.projectArray.length) {
       this.projectArray[index].push([])
-      console.log(this.projectArray)
     }
   }
 
@@ -91,7 +88,6 @@ export class Project extends TaskManager {
     ) {
       const element = this.projectArray[indexOfProject][indexOfTodo].pop()
       this.finishedTasks.push(element)
-      console.log(this.finishedTasks)
     }
   }
 
@@ -106,7 +102,6 @@ export class Project extends TaskManager {
   removeTodoOfProject(activeList, todoOfIt) {
     if (activeList >= 0 && activeList < this.projectArray.length)
       this.projectArray[activeList].splice(todoOfIt, 1)
-    console.log(this.projectArray)
   }
 
   removeTaskFromProject(indexOfProject, indexOfTodo) {

@@ -8,6 +8,8 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable import/prefer-default-export */
 // Create the input filed and display task
+
+import { isBefore, startOfDay, parseISO, isSameDay, isAfter } from 'date-fns'
 import Todo from './todo'
 import { trackingActiveClass } from './tab-management'
 import { inboxStorage, projectStorage } from './tab'
@@ -16,6 +18,7 @@ import { addingButton } from '..'
 export class CreateTaskInput {
   constructor() {
     this.containerDiv = document.createElement('div')
+    this.containerDiv.classList.add('input-div')
     this.createCheckbox()
     this.createName()
     this.createDescription()
@@ -59,9 +62,8 @@ export class CreateTaskInput {
 
   createDueDate() {
     this.inputDate = document.createElement('input')
-    this.inputDate.type = 'text'
+    this.inputDate.type = 'date'
     this.inputDate.id = 'DueDate'
-    this.inputDate.placeholder = 'DueDate'
     this.containerDiv.appendChild(this.inputDate)
     return this.inputDate
   }
@@ -112,10 +114,12 @@ export class CreateTaskInput {
     return id.value
   }
 
-  getInputFiledsFilled() {
+  getInputFiledsFilled(date) {
+    const getToday = startOfDay(new Date())
     if (
       this.getValue(this.inputFieldName) !== '' &&
-      this.getValue(this.inputDate) !== ''
+      this.getValue(this.inputDate) !== '' &&
+      isBefore(parseISO(date), getToday) === false
     ) {
       return true
     }
@@ -131,7 +135,7 @@ export class CreateTaskInput {
 
     // add accordingly
     if (trackingActiveClass.inboxContainingActive()) {
-      if (this.getInputFiledsFilled()) {
+      if (this.getInputFiledsFilled(this.getValue(this.inputDate))) {
         const name = this.getValue(this.inputFieldName)
         const description = this.getValue(this.inputFieldDesc)
         const dueDate = this.getValue(this.inputDate)
@@ -147,10 +151,7 @@ export class CreateTaskInput {
         addingButton.style.display = 'block'
       }
     } else if (trackingActiveClass.projectContainingActive()) {
-      if (
-        this.getValue(this.inputFieldName) !== '' &&
-        this.getValue(this.inputDate) !== ''
-      ) {
+      if (this.getInputFiledsFilled(this.getValue(this.inputDate))) {
         const name = this.getValue(this.inputFieldName)
         const description = this.getValue(this.inputFieldDesc)
         const dueDate = this.getValue(this.inputDate)
@@ -244,12 +245,28 @@ export class DisplayTask {
 
       if (task.status === false) {
         card.appendChild(this.statusElement)
+        card.appendChild(this.deleteElement)
+      } else if (
+        task.status === true &&
+        (isSameDay(parseISO(task.dueDate), startOfDay(new Date())) ||
+          isBefore(startOfDay(new Date()), parseISO(task.dueDate)))
+      ) {
+        card.style.backgroundColor = 'green'
+        card.appendChild(this.statusElement)
+      } else if (
+        task.status === true &&
+        isAfter(startOfDay(new Date()), parseISO(task.dueDate))
+      ) {
+        card.style.backgroundColor = 'red'
+        card.appendChild(this.statusElement)
       }
       card.appendChild(this.priorityElement)
       card.appendChild(this.nameElement)
       card.appendChild(this.descriptionElement)
       card.appendChild(this.dueDateElement)
-      card.appendChild(this.deleteElement)
+      if (task.status === false) {
+        card.appendChild(this.deleteElement)
+      }
 
       container.appendChild(card)
     })
