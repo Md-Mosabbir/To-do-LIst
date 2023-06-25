@@ -29,6 +29,7 @@ height: 100vh;
   align-items: center;
   padding: 20px;
   gap: 1rem;
+  border-bottom: 1px solid black;
 
 
   
@@ -51,10 +52,6 @@ height: 100vh;
 }
 
 
-.title-back {
-  background-color: antiquewhite;
-  
-}
 input {
   outline: none;
 }
@@ -243,10 +240,10 @@ nav {
   align-items: flex-start;
   width: 100%;
   height: 100%;
-  background-color: #f5f5f5;
+  
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
 }
 
 .task-card {
@@ -254,6 +251,7 @@ nav {
   align-items: center;
   gap: 1.2rem;
   width: 100%;
+  height: 60px;
   padding: 10px;
   background-color: #ffffff;
   border-radius: 8px;
@@ -302,12 +300,14 @@ nav {
   margin: 0;
   font-size: 22px;
   margin-left: 20px;
+  font-size: 25px;
 }
 
 .task-description {
   margin: 0;
   font-size: 14px;
   color: #888888;
+  
 }
 
 .task-due-date {
@@ -316,6 +316,7 @@ nav {
   color: #888888;
   margin-left: auto;
   margin-right: 10px;
+  font-size: 20px;
 }
 
 .task-delete {
@@ -344,6 +345,7 @@ nav {
   border-radius: 7px;
   gap: 2.5rem;
   width: 80%;
+  height: 80px;
 }
 
 .input-div input[type="checkbox"] {
@@ -386,5 +388,5 @@ nav {
 }
 
 .input-div button:hover {
-  background-color: #0056b3;
+  background-color: #000000;
 }
