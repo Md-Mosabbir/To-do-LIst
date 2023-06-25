@@ -166,6 +166,7 @@ export class ProjectCreation {
     this.projectNav = document.createElement('div')
     this.projectNav.classList.add('project-nav')
     this.titleH3 = document.createElement('input')
+    this.titleH3.required = true
     this.doneButton = document.createElement('button')
     this.doneButton.textContent = 'Add'
 
@@ -213,22 +214,25 @@ export class ProjectCreation {
   }
 
   submitProject() {
-    this.inputValue = this.titleH3.value
-    this.displaySpan.textContent = `${this.inputValue}`
-    this.titleH3.style.display = 'none'
-    this.doneButton.style.display = 'none'
-    this.removeProjectTask.style.display = 'block'
-    this.deleteListButton.remove()
+    if (this.titleH3.value !== '') {
+      this.inputValue = this.titleH3.value
+      this.displaySpan.textContent = `${this.inputValue}`
+      this.titleH3.style.display = 'none'
+      this.doneButton.style.display = 'none'
+      this.removeProjectTask.style.display = 'block'
+      this.deleteListButton.remove()
 
-    this.displaySpan.style.display = 'block'
-    this.addProjectTask.style.display = 'inline-block'
-    projectStorage.addProject()
+      this.displaySpan.style.display = 'block'
+      this.addProjectTask.style.display = 'inline-block'
+      projectStorage.addProject()
+    }
   }
 
   createTaskToProject() {
     this.taskOfProjectInputContainer = document.createElement('div')
     this.taskOfProjectInputContainer.classList.add('container-of-project-task')
     this.taskOfProjectInput = document.createElement('input')
+    this.taskOfProjectInput.required = true
     this.doneButton = document.createElement('button')
     this.doneButton.textContent = 'Add'
 
@@ -256,14 +260,16 @@ export class ProjectCreation {
   }
 
   submitTaskToProject() {
-    this.deleteTaskInput.remove()
-    this.taskOfButton.textContent = this.taskOfProjectInput.value
-    this.taskOfButton.style.display = 'block'
-    this.taskOfProjectInput.style.display = 'none'
-    this.doneButton.remove()
-    const getList = document.querySelectorAll('.list')
-    projectStorage.addTodoToProject(
-      Array.from(getList).indexOf(this.projectList)
-    )
+    if (this.taskOfProjectInput.value !== '') {
+      this.deleteTaskInput.remove()
+      this.taskOfButton.textContent = this.taskOfProjectInput.value
+      this.taskOfButton.style.display = 'block'
+      this.taskOfProjectInput.style.display = 'none'
+      this.doneButton.remove()
+      const getList = document.querySelectorAll('.list')
+      projectStorage.addTodoToProject(
+        Array.from(getList).indexOf(this.projectList)
+      )
+    }
   }
 }
