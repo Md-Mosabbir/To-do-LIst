@@ -21,9 +21,20 @@ export const trackingActiveClass = (() => {
   const finish = document.querySelector('.finish')
   const backButton = document.getElementById('back-button')
   const deleteTaskAll = document.getElementById('delete-project-task-button')
+  const titleOfActive = document.getElementById('title-of-active')
   deleteTaskAll.style.display = 'none'
   backButton.style.display = 'none'
-
+  function getText() {
+    titleOfActive.textContent = ''
+    if (inboxContainingActive()) {
+      titleOfActive.textContent = 'Inbox'
+    } else if (projectContainingActive()) {
+      const activeTextContent = document.querySelector(
+        '.task-of-proj.set-active.active'
+      ).textContent
+      titleOfActive.textContent = activeTextContent
+    }
+  }
   deleteTaskAll.addEventListener('click', () => {
     if (inboxContainingActive()) {
       inboxStorage.removeFinishTask()
@@ -53,6 +64,7 @@ export const trackingActiveClass = (() => {
     new DisplayTask(inboxStorage.getTasks())
     project.classList.remove('c-active')
     deleteTaskAll.style.display = 'none'
+    getText()
   })
   project.addEventListener('click', (e) => {
     if (e.target.classList.contains('set-active')) {
@@ -67,13 +79,14 @@ export const trackingActiveClass = (() => {
           trackingActiveClass.getButtonIndex()
         )
       )
+      getText()
     }
   })
 
   finish.addEventListener('click', () => {
     backButton.style.display = 'block'
     addingButton.style.display = 'none'
-
+    titleOfActive.textContent = 'Completed'
     if (inboxTab.classList.contains('active')) {
       deleteTaskAll.style.display = 'block'
       new DisplayTask(inboxStorage.getFinishedTask())
@@ -97,6 +110,7 @@ export const trackingActiveClass = (() => {
           trackingActiveClass.getButtonIndex()
         )
       )
+      getText()
     }
   })
 
