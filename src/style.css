@@ -412,6 +412,7 @@ nav {
   height: 20px;
   cursor: pointer;
   z-index: 5;
+  
 }
 
 .line {
@@ -419,6 +420,7 @@ nav {
   height: 3px;
   background-color: #333333;
   margin-bottom: 5px;
+  transition: transform 0.2s;
 }
 
 
@@ -432,7 +434,7 @@ nav {
     display: block;
   }
   .hamburger.clicked .line:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    transform: rotate(45deg) translate(6px, 6px);
   }
   
   .hamburger.clicked .line:nth-child(2) {
