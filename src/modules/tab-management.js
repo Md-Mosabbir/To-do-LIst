@@ -22,6 +22,11 @@ export const trackingActiveClass = (() => {
   const backButton = document.getElementById('back-button')
   const deleteTaskAll = document.getElementById('delete-project-task-button')
   const titleOfActive = document.getElementById('title-of-active')
+  const hamburger = document.querySelector('.hamburger')
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('clicked')
+    document.querySelector('.side-nav-container').classList.toggle('clicked')
+  })
   deleteTaskAll.style.display = 'none'
   backButton.style.display = 'none'
   function getText() {
@@ -101,6 +106,7 @@ export const trackingActiveClass = (() => {
 
     if (trackingActiveClass.inboxContainingActive()) {
       new DisplayTask(inboxStorage.getTasks())
+      getText()
       deleteTaskAll.setAttribute('style', 'display: none')
     } else if (trackingActiveClass.projectContainingActive()) {
       deleteTaskAll.style.display = 'block'
