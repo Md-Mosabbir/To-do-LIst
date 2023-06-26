@@ -8,13 +8,18 @@ export class TaskManager {
     this.tasks.push(obj)
   }
 
-  removeTask() {
-    this.tasks.pop()
+  removeTask(taskIndex) {
+    if (taskIndex >= 0 && taskIndex < this.tasks.length) {
+      this.tasks.splice(taskIndex, 1)
+    }
+    console.log(this.tasks)
   }
 
-  finishTask() {
-    const element = this.tasks.pop()
-    this.finishedTasks.push(element)
+  finishTask(taskIndex) {
+    if (taskIndex >= 0 && taskIndex < this.task.length) {
+      const finishedTask = this.task.splice(taskIndex, 1)[0]
+      this.finishedTask.push(finishedTask)
+    }
   }
 
   removeFinishTask() {
@@ -99,9 +104,11 @@ export class Project extends TaskManager {
     this.projectArray.pop()
   }
 
-  removeTodoOfProject(activeList, todoOfIt) {
-    if (activeList >= 0 && activeList < this.projectArray.length)
-      this.projectArray[activeList].splice(todoOfIt, 1)
+  removeTodoOfProject(activeList) {
+    if (activeList >= 0 && activeList < this.projectArray.length) {
+      this.projectArray[activeList].pop()
+      console.log(this.projectArray)
+    }
   }
 
   removeTaskFromProject(indexOfProject, indexOfTodo) {
@@ -126,8 +133,8 @@ export const inboxStorage = (() => {
   return {
     addTask: (task) => inbox.addTask(task),
     getTasks: () => inbox.tasks,
-    removeTask: () => inbox.removeTask(),
-    finishTask: () => inbox.finishTask(),
+    removeTask: (taskIndex) => inbox.removeTask(taskIndex),
+    finishTask: (taskIndex) => inbox.finishTask(taskIndex),
     getFinishedTask: () => inbox.getFinishedTask(),
     removeFinishTask: () => inbox.removeFinishTask(),
   }
