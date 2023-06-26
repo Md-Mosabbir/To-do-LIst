@@ -200,11 +200,12 @@ export class DisplayTask {
       this.statusElement.addEventListener('click', () => {
         task.status = true
         if (trackingActiveClass.inboxContainingActive()) {
-          inboxStorage.finishTask()
+          inboxStorage.finishTask(trackingActiveClass.getTask(card))
         } else if (trackingActiveClass.projectContainingActive()) {
           projectStorage.finishProjectTask(
             trackingActiveClass.getIndexOfActiveTodo(),
-            trackingActiveClass.getButtonIndex()
+            trackingActiveClass.getButtonIndex(),
+            trackingActiveClass.getTask(card)
           )
         }
         card.remove()
@@ -232,7 +233,8 @@ export class DisplayTask {
 
       this.deleteElement.addEventListener('click', () => {
         if (trackingActiveClass.inboxContainingActive()) {
-          inboxStorage.removeTask()
+          console.log(trackingActiveClass.getTask(card))
+          inboxStorage.removeTask(trackingActiveClass.getTask(card))
         } else if (trackingActiveClass.projectContainingActive()) {
           projectStorage.removeTaskFromProject(
             trackingActiveClass.getIndexOfActiveTodo(),
