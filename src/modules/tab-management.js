@@ -44,12 +44,8 @@ export const trackingActiveClass = (() => {
     if (inboxContainingActive()) {
       inboxStorage.removeFinishTask()
     } else if (projectContainingActive()) {
-      projectStorage.removeTodoOfProject(
-        getIndexOfActiveTodo(),
-        getButtonIndex()
-      )
+      addingButton.style.display = 'none'
       projectStorage.removeFinishProjectTask()
-      document.querySelector('.task-of-proj.set-active.active').remove()
     }
     deleteTaskAll.style.display = 'none'
     task.innerHTML = ''
