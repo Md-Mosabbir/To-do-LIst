@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 export class TaskManager {
   constructor() {
     this.tasks = []
@@ -16,18 +17,14 @@ export class TaskManager {
   }
 
   finishTask(taskIndex) {
-    if (taskIndex >= 0 && taskIndex < this.task.length) {
-      const finishedTask = this.task.splice(taskIndex, 1)[0]
-      this.finishedTask.push(finishedTask)
+    if (taskIndex >= 0 && taskIndex < this.tasks.length) {
+      const finishedTask = this.tasks.splice(taskIndex, 1)[0]
+      this.finishedTasks.push(finishedTask)
     }
   }
 
   removeFinishTask() {
     this.finishedTasks.splice(0, this.finishedTasks.length)
-  }
-
-  getFinishedTask() {
-    return this.finishedTasks
   }
 }
 
@@ -48,7 +45,7 @@ export class Project extends TaskManager {
     this.projectArray.push([])
   }
 
-  addTodoToProject(index) {
+  addList(index) {
     if (index >= 0 && index < this.projectArray.length) {
       this.projectArray[index].push([])
     }
@@ -73,7 +70,7 @@ export class Project extends TaskManager {
     }
   }
 
-  addTaskToProject(indexOfProject, indexOfTodo, object) {
+  addTodoToList(indexOfProject, indexOfTodo, object) {
     if (
       indexOfProject >= 0 &&
       indexOfProject < this.projectArray.length &&
@@ -84,15 +81,16 @@ export class Project extends TaskManager {
     }
   }
 
-  finishProjectTask(indexOfProject, indexOfTodo) {
-    if (
-      indexOfProject >= 0 &&
-      indexOfProject < this.projectArray.length &&
-      indexOfTodo >= 0 &&
-      indexOfTodo < this.projectArray[indexOfProject].length
-    ) {
-      const element = this.projectArray[indexOfProject][indexOfTodo].pop()
-      this.finishedTasks.push(element)
+  finishProjectTask(listIndex, taskIndex, objectIndex) {
+    if (listIndex >= 0 && listIndex < this.project.length) {
+      const list = this.projectArray[listIndex]
+      if (taskIndex >= 0 && taskIndex < list.length) {
+        const task = list[taskIndex]
+        if (objectIndex >= 0 && objectIndex < task.length) {
+          const finishedObject = task.splice(objectIndex, 1)[0]
+          this.finishedProject.push(finishedObject)
+        }
+      }
     }
   }
 
@@ -135,7 +133,7 @@ export const inboxStorage = (() => {
     getTasks: () => inbox.tasks,
     removeTask: (taskIndex) => inbox.removeTask(taskIndex),
     finishTask: (taskIndex) => inbox.finishTask(taskIndex),
-    getFinishedTask: () => inbox.getFinishedTask(),
+    getFinishedTask: () => inbox.finishedTasks,
     removeFinishTask: () => inbox.removeFinishTask(),
   }
 })()
@@ -145,12 +143,12 @@ export const projectStorage = (() => {
 
   return {
     addProject: () => project.addProject(),
-    addTodoToProject: (index) => project.addTodoToProject(index),
-    addTaskToProject: (indexOfProject, indexOfTodo, object) =>
-      project.addTaskToProject(indexOfProject, indexOfTodo, object),
+    addList: (index) => project.addList(index),
+    addTodoToList: (indexOfProject, indexOfTodo, object) =>
+      project.addTodoToList(indexOfProject, indexOfTodo, object),
     removeProject: () => project.removeProject(),
-    finishProjectTask: (indexOfProject, indexOfTodo) =>
-      project.finishProjectTask(indexOfProject, indexOfTodo),
+    finishProjectTask: (listIndex, taskIndex, objectIndex) =>
+      project.finishProjectTask(listIndex, taskIndex, objectIndex),
     getFinishedProjectTask: () => project.getFinishedProjectTask(),
     removeTaskFromProject: (indexOfProject, indexOfTodo) =>
       project.removeTaskFromProject(indexOfProject, indexOfTodo),
