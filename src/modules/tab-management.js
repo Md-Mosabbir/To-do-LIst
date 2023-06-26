@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-new */
 /* eslint-disable no-plusplus */
 /* eslint-disable import/no-cycle */
@@ -50,6 +51,9 @@ export const trackingActiveClass = (() => {
     deleteTaskAll.style.display = 'none'
     task.innerHTML = ''
   })
+  function getTask(index) {
+    return [...task.children].indexOf(index)
+  }
   function removeActiveClass() {
     addingButton.style.display = 'block'
     backButton.style.display = 'none'
@@ -157,6 +161,7 @@ export const trackingActiveClass = (() => {
     projectContainingActive,
     getIndexOfActiveTodo,
     getButtonIndex,
+    getTask,
   }
 })()
 
@@ -185,7 +190,7 @@ export class ProjectCreation {
 
     this.removeProjectTask = document.createElement('button')
     this.removeProjectTask.classList.add('remove-projects')
-    this.removeProjectTask.textContent = 'x'
+    this.removeProjectTask.textContent = 'X'
     this.removeProjectTask.style.display = 'none'
 
     this.projectNav.appendChild(this.titleH3)
@@ -223,6 +228,8 @@ export class ProjectCreation {
       this.doneButton.style.display = 'none'
       this.removeProjectTask.style.display = 'block'
       this.deleteListButton.remove()
+      this.titleH3.remove()
+      this.doneButton.remove()
 
       this.displaySpan.style.display = 'block'
       this.addProjectTask.style.display = 'inline-block'
@@ -230,9 +237,17 @@ export class ProjectCreation {
     }
   }
 
+  deleteTaskFromList() {
+    projectStorage.removeTodoOfProject(
+      trackingActiveClass.getIndexOfActiveTodo()
+    )
+    this.taskOfProjectInputContainer.remove()
+  }
+
   createTaskToProject() {
     this.taskOfProjectInputContainer = document.createElement('div')
     this.taskOfProjectInputContainer.classList.add('container-of-project-task')
+    //-----
     this.taskOfProjectInput = document.createElement('input')
     this.taskOfProjectInput.required = true
     this.doneButton = document.createElement('button')
@@ -240,7 +255,7 @@ export class ProjectCreation {
 
     this.deleteTaskInput = document.createElement('button')
     this.deleteTaskInput.textContent = 'x'
-
+    // -------
     this.deleteTaskInput.addEventListener('click', () =>
       this.taskOfProjectInputContainer.remove()
     )
@@ -248,12 +263,23 @@ export class ProjectCreation {
       'click',
       this.submitTaskToProject.bind(this)
     )
-
+    //---
     this.taskOfButton = document.createElement('div')
-    this.taskOfButton.style.display = 'none'
+
     this.taskOfButton.classList.add('task-of-proj')
     this.taskOfButton.classList.add('set-active')
 
+    this.deleteTaskButton = document.createElement('button')
+    this.deleteTaskButton.addEventListener(
+      'click',
+      this.deleteTaskFromList.bind(this)
+    )
+    this.icon = document.createElement('i')
+    this.icon.classList.add('fa-solid', 'fa-xmark')
+    this.deleteTaskButton.appendChild(this.icon)
+    this.deleteTaskButton.setAttribute('style', 'min-width: 45px; height: 40px')
+    this.taskOfButton.appendChild(this.deleteTaskButton)
+    this.taskOfButton.style.display = 'none'
     this.taskOfProjectInputContainer.appendChild(this.taskOfProjectInput)
     this.taskOfProjectInputContainer.appendChild(this.doneButton)
     this.taskOfProjectInputContainer.appendChild(this.taskOfButton)
@@ -264,10 +290,17 @@ export class ProjectCreation {
   submitTaskToProject() {
     if (this.taskOfProjectInput.value !== '') {
       this.deleteTaskInput.remove()
-      this.taskOfButton.textContent = this.taskOfProjectInput.value
-      this.taskOfButton.style.display = 'block'
-      this.taskOfProjectInput.style.display = 'none'
+      this.enteredText = this.taskOfProjectInput.value
+      this.textNode = document.createTextNode(this.enteredText)
+      this.taskOfButton.appendChild(this.textNode)
+      this.taskOfButton.style.display = 'flex'
+
+      this.taskOfButton.setAttribute(
+        'style',
+        'display: flex; flex-direction: row; justify-content: start; align-items: center; gap: 0.8rem; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding: 10px;'
+      )
       this.doneButton.remove()
+      this.taskOfProjectInput.remove()
       const getList = document.querySelectorAll('.list')
       projectStorage.addTodoToProject(
         Array.from(getList).indexOf(this.projectList)
