@@ -46,7 +46,7 @@ export const trackingActiveClass = (() => {
       inboxStorage.removeFinishTask()
     } else if (projectContainingActive()) {
       addingButton.style.display = 'none'
-      projectStorage.removeFinishProjectTask()
+      projectStorage.removeFinsihedList()
     }
     deleteTaskAll.style.display = 'none'
     task.innerHTML = ''
@@ -79,7 +79,7 @@ export const trackingActiveClass = (() => {
       project.classList.add('c-active')
       deleteTaskAll.style.display = 'block'
       new DisplayTask(
-        projectStorage.getTaskToProject(
+        projectStorage.getTaskOfList(
           trackingActiveClass.getIndexOfActiveTodo(),
           trackingActiveClass.getButtonIndex()
         )
@@ -96,7 +96,7 @@ export const trackingActiveClass = (() => {
       deleteTaskAll.style.display = 'block'
       new DisplayTask(inboxStorage.getFinishedTask())
     } else if (project.classList.contains('c-active')) {
-      new DisplayTask(projectStorage.getFinishedProjectTask())
+      new DisplayTask(projectStorage.getFinsihedList())
       deleteTaskAll.style.display = 'none'
     }
   })
@@ -111,7 +111,7 @@ export const trackingActiveClass = (() => {
     } else if (trackingActiveClass.projectContainingActive()) {
       deleteTaskAll.style.display = 'block'
       new DisplayTask(
-        projectStorage.getTaskToProject(
+        projectStorage.getTaskOfList(
           trackingActiveClass.getIndexOfActiveTodo(),
           trackingActiveClass.getButtonIndex()
         )
@@ -204,10 +204,10 @@ export class ProjectCreation {
     document
       .querySelector('.list-and-tasks-container')
       .appendChild(this.projectList)
-    this.doneButton.addEventListener('click', this.submitProject.bind(this))
+    this.doneButton.addEventListener('click', this.submitList.bind(this))
     this.addProjectTask.addEventListener(
       'click',
-      this.createTaskToProject.bind(this)
+      this.createTaskToList.bind(this)
     )
     this.removeProjectTask.addEventListener('click', this.removeList.bind(this))
     this.deleteListButton.addEventListener('click', () =>
@@ -217,10 +217,10 @@ export class ProjectCreation {
 
   removeList() {
     this.projectList.remove()
-    projectStorage.removeProject()
+    projectStorage.removeList(trackingActiveClass.getIndexOfActiveTodo)
   }
 
-  submitProject() {
+  submitList() {
     if (this.titleH3.value !== '') {
       this.inputValue = this.titleH3.value
       this.displaySpan.textContent = `${this.inputValue}`
@@ -233,18 +233,19 @@ export class ProjectCreation {
 
       this.displaySpan.style.display = 'block'
       this.addProjectTask.style.display = 'inline-block'
-      projectStorage.addProject()
+      projectStorage.addList()
     }
   }
 
   deleteTaskFromList() {
-    projectStorage.removeTodoOfProject(
-      trackingActiveClass.getIndexOfActiveTodo()
+    projectStorage.removeTaskOfList(
+      trackingActiveClass.getIndexOfActiveTodo,
+      trackingActiveClass.getButtonIndex
     )
     this.taskOfProjectInputContainer.remove()
   }
 
-  createTaskToProject() {
+  createTaskToList() {
     this.taskOfProjectInputContainer = document.createElement('div')
     this.taskOfProjectInputContainer.classList.add('container-of-project-task')
     //-----
@@ -302,9 +303,7 @@ export class ProjectCreation {
       this.doneButton.remove()
       this.taskOfProjectInput.remove()
       const getList = document.querySelectorAll('.list')
-      projectStorage.addTodoToProject(
-        Array.from(getList).indexOf(this.projectList)
-      )
+      projectStorage.addTask(Array.from(getList).indexOf(this.projectList))
     }
   }
 }
