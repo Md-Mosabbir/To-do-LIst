@@ -1,4 +1,8 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable consistent-return */
+
+import { saveInboxData, saveProjectData } from './storage'
+
 export class TaskManager {
   constructor() {
     this.tasks = []
@@ -7,13 +11,14 @@ export class TaskManager {
 
   addTask(obj) {
     this.tasks.push(obj)
+    saveInboxData()
   }
 
   removeTask(taskIndex) {
     if (taskIndex >= 0 && taskIndex < this.tasks.length) {
       this.tasks.splice(taskIndex, 1)
     }
-    console.log(this.tasks)
+    saveInboxData()
   }
 
   finishTask(taskIndex) {
@@ -21,10 +26,12 @@ export class TaskManager {
       const finishedTask = this.tasks.splice(taskIndex, 1)[0]
       this.finishedTasks.push(finishedTask)
     }
+    saveInboxData()
   }
 
   removeFinishTask() {
     this.finishedTasks.splice(0, this.finishedTasks.length)
+    saveInboxData()
   }
 }
 
@@ -32,6 +39,7 @@ export class Inbox extends TaskManager {
   // eslint-disable-next-line no-useless-constructor
   constructor() {
     super()
+    saveInboxData()
   }
 }
 
@@ -39,16 +47,21 @@ export class Project extends TaskManager {
   constructor() {
     super()
     this.projectArray = []
+    this.finishedTasks = []
+    saveProjectData()
   }
 
   addList() {
     this.projectArray.push([])
+    this.finishedTasks.push([])
+    saveProjectData()
   }
 
   addTask(index) {
     if (index >= 0 && index < this.projectArray.length) {
       this.projectArray[index].push([])
     }
+    saveProjectData()
   }
 
   addTodoToList(indexOfProject, indexOfTodo, object) {
@@ -60,6 +73,7 @@ export class Project extends TaskManager {
     ) {
       this.projectArray[indexOfProject][indexOfTodo].push(object)
     }
+    saveProjectData()
   }
 
   // eslint-disable-next-line consistent-return
@@ -81,28 +95,30 @@ export class Project extends TaskManager {
     }
   }
 
-  getFinsihedList() {
-    return this.finishedTasks
+  getFinsihedList(index) {
+    return this.finishedTasks[index]
   }
 
-  finishProjectTodo(listIndex, taskIndex, objectIndex) {
+  finishProjectTodo(listIndex, taskIndex, objectIndex, indexOfListOfFinsihed) {
     if (listIndex >= 0 && listIndex < this.projectArray.length) {
       const list = this.projectArray[listIndex]
       if (taskIndex >= 0 && taskIndex < list.length) {
         const task = list[taskIndex]
         if (objectIndex >= 0 && objectIndex < task.length) {
           const finishedObject = task.splice(objectIndex, 1)[0]
-          this.finishedTasks.push(finishedObject)
+          this.finishedTasks[indexOfListOfFinsihed].push(finishedObject)
         }
       }
     }
+    saveProjectData()
   }
 
   removeList(listIndex) {
     if (listIndex >= 0 && listIndex < this.projectArray.length) {
       this.projectArray.splice(listIndex, 1)
+      this.finishedTasks.splice(listIndex, 1)
     }
-    console.log(this.projectArray)
+    saveProjectData()
   }
 
   removeTaskOfList(listIndex, taskIndex) {
@@ -112,7 +128,7 @@ export class Project extends TaskManager {
         list.splice(taskIndex, 1)
       }
     }
-    console.log(this.projectArray)
+    saveProjectData()
   }
 
   removeTodoFromList(listIndex, taskIndex, objectIndex) {
@@ -125,10 +141,12 @@ export class Project extends TaskManager {
         }
       }
     }
+    saveProjectData()
   }
 
-  removeFinsihedList() {
-    this.finishedTasks.splice(0, this.finishedTasks.length)
+  removeFinsihedList(index) {
+    this.finishedTasks[index].splice(0, this.finishedTasks.length)
+    saveProjectData()
   }
 }
 
@@ -154,9 +172,19 @@ export const projectStorage = (() => {
     addTodoToList: (indexOfProject, indexOfTodo, object) =>
       project.addTodoToList(indexOfProject, indexOfTodo, object),
     removeList: (listIndex) => project.removeList(listIndex),
-    finishProjectTodo: (listIndex, taskIndex, objectIndex) =>
-      project.finishProjectTodo(listIndex, taskIndex, objectIndex),
-    getFinsihedList: () => project.getFinsihedList(),
+    finishProjectTodo: (
+      listIndex,
+      taskIndex,
+      objectIndex,
+      indexOfListOfFinsihed
+    ) =>
+      project.finishProjectTodo(
+        listIndex,
+        taskIndex,
+        objectIndex,
+        indexOfListOfFinsihed
+      ),
+    getFinsihedList: (index) => project.getFinsihedList(index),
     removeTodoFromList: (listIndex, taskIndex, objectIndex) =>
       project.removeTodoFromList(listIndex, taskIndex, objectIndex),
     getList: (index) => project.getList(index),
@@ -164,8 +192,8 @@ export const projectStorage = (() => {
       project.getTaskOfList(indexOfProject, indexOfTodo),
     removeTaskOfList: (listIndex, taskIndex) =>
       project.removeTaskOfList(listIndex, taskIndex),
-    removeFinsihedList: () => {
-      project.removeFinsihedList()
+    removeFinsihedList: (index) => {
+      project.removeFinsihedList(index)
     },
   }
 })()
