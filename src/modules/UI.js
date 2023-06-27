@@ -131,8 +131,6 @@ export class CreateTaskInput {
   }
 
   handleSubmit() {
-    // check active class holder
-
     // add accordingly
     if (trackingActiveClass.inboxContainingActive()) {
       if (this.getInputFiledsFilled(this.getValue(this.inputDate))) {
@@ -205,7 +203,8 @@ export class DisplayTask {
           projectStorage.finishProjectTodo(
             trackingActiveClass.getIndexOfActiveTodo(),
             trackingActiveClass.getButtonIndex(),
-            trackingActiveClass.getTask(card)
+            trackingActiveClass.getTask(card),
+            trackingActiveClass.getIndexOfActiveTodo()
           )
         }
         card.remove()
