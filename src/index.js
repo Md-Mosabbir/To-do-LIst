@@ -11,6 +11,7 @@ import '@fortawesome/fontawesome-free/js/all.js'
 import { CreateTaskInput, DisplayTask } from './modules/UI'
 // eslint-disable-next-line no-unused-vars
 import { inboxStorage, projectStorage } from './modules/tab'
+import { loadProjectData, loadInboxData } from './modules/storage'
 
 import { trackingActiveClass, ProjectCreation } from './modules/tab-management'
 
@@ -22,3 +23,14 @@ addingButton.addEventListener('click', () => {
 
 export const addingProject = document.querySelector('#adding-project')
 addingProject.addEventListener('click', () => new ProjectCreation())
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Load project data
+  loadProjectData()
+
+  // Load inbox data
+  loadInboxData()
+
+  // Perform any additional actions after loading the data
+  // ...
+})
