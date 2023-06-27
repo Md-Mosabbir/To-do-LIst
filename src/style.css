@@ -54,6 +54,7 @@ height: 100vh;
 
 input {
   outline: none;
+  padding: 10px;
 }
 
 .side-nav-container{
@@ -177,6 +178,7 @@ nav {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  
 }
 .project-nav{
     
@@ -221,6 +223,7 @@ nav {
   margin: 10px;
   bottom: 0;
   
+  
 }
 
 #adding-button{
@@ -228,6 +231,7 @@ nav {
   height: 65px;
   border-radius: 50%;
   font-size: 50px;
+  background-color: #000000;
 }
 
 
