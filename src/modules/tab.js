@@ -1,8 +1,6 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable consistent-return */
 
-import { saveInboxData, saveProjectData } from './storage'
-
 export class TaskManager {
   constructor() {
     this.tasks = []
@@ -11,14 +9,12 @@ export class TaskManager {
 
   addTask(obj) {
     this.tasks.push(obj)
-    saveInboxData()
   }
 
   removeTask(taskIndex) {
     if (taskIndex >= 0 && taskIndex < this.tasks.length) {
       this.tasks.splice(taskIndex, 1)
     }
-    saveInboxData()
   }
 
   finishTask(taskIndex) {
@@ -26,12 +22,10 @@ export class TaskManager {
       const finishedTask = this.tasks.splice(taskIndex, 1)[0]
       this.finishedTasks.push(finishedTask)
     }
-    saveInboxData()
   }
 
   removeFinishTask() {
     this.finishedTasks.splice(0, this.finishedTasks.length)
-    saveInboxData()
   }
 }
 
@@ -39,7 +33,6 @@ export class Inbox extends TaskManager {
   // eslint-disable-next-line no-useless-constructor
   constructor() {
     super()
-    saveInboxData()
   }
 }
 
@@ -48,20 +41,17 @@ export class Project extends TaskManager {
     super()
     this.projectArray = []
     this.finishedTasks = []
-    saveProjectData()
   }
 
   addList() {
     this.projectArray.push([])
     this.finishedTasks.push([])
-    saveProjectData()
   }
 
   addTask(index) {
     if (index >= 0 && index < this.projectArray.length) {
       this.projectArray[index].push([])
     }
-    saveProjectData()
   }
 
   addTodoToList(indexOfProject, indexOfTodo, object) {
@@ -73,7 +63,6 @@ export class Project extends TaskManager {
     ) {
       this.projectArray[indexOfProject][indexOfTodo].push(object)
     }
-    saveProjectData()
   }
 
   // eslint-disable-next-line consistent-return
@@ -110,7 +99,6 @@ export class Project extends TaskManager {
         }
       }
     }
-    saveProjectData()
   }
 
   removeList(listIndex) {
@@ -118,7 +106,6 @@ export class Project extends TaskManager {
       this.projectArray.splice(listIndex, 1)
       this.finishedTasks.splice(listIndex, 1)
     }
-    saveProjectData()
   }
 
   removeTaskOfList(listIndex, taskIndex) {
@@ -128,7 +115,6 @@ export class Project extends TaskManager {
         list.splice(taskIndex, 1)
       }
     }
-    saveProjectData()
   }
 
   removeTodoFromList(listIndex, taskIndex, objectIndex) {
@@ -141,15 +127,12 @@ export class Project extends TaskManager {
         }
       }
     }
-    saveProjectData()
   }
 
   removeFinsihedList(index) {
     this.finishedTasks[index].splice(0, this.finishedTasks.length)
-    saveProjectData()
   }
 }
-
 export const inboxStorage = (() => {
   const inbox = new Inbox()
 
