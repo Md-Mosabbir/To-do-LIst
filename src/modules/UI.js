@@ -160,13 +160,13 @@ export class CreateTaskInput {
 
         const _task = new Todo(name, description, dueDate, priority, status)
         // ------------sdfadsffa-----
-        projectStorage.addTaskToProject(
+        projectStorage.addTodoToList(
           trackingActiveClass.getIndexOfActiveTodo(),
           trackingActiveClass.getButtonIndex(),
           _task
         )
         this.displayTask(
-          projectStorage.getTaskToProject(
+          projectStorage.getTaskOfList(
             trackingActiveClass.getIndexOfActiveTodo(),
             trackingActiveClass.getButtonIndex()
           )
@@ -202,7 +202,7 @@ export class DisplayTask {
         if (trackingActiveClass.inboxContainingActive()) {
           inboxStorage.finishTask(trackingActiveClass.getTask(card))
         } else if (trackingActiveClass.projectContainingActive()) {
-          projectStorage.finishProjectTask(
+          projectStorage.finishProjectTodo(
             trackingActiveClass.getIndexOfActiveTodo(),
             trackingActiveClass.getButtonIndex(),
             trackingActiveClass.getTask(card)
@@ -236,9 +236,10 @@ export class DisplayTask {
           console.log(trackingActiveClass.getTask(card))
           inboxStorage.removeTask(trackingActiveClass.getTask(card))
         } else if (trackingActiveClass.projectContainingActive()) {
-          projectStorage.removeTaskFromProject(
+          projectStorage.removeTodoFromList(
             trackingActiveClass.getIndexOfActiveTodo(),
-            trackingActiveClass.getButtonIndex()
+            trackingActiveClass.getButtonIndex(),
+            trackingActiveClass.getTask(card)
           )
         }
 
