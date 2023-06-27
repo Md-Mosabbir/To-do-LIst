@@ -50,6 +50,7 @@ export const trackingActiveClass = (() => {
     }
     deleteTaskAll.style.display = 'none'
     task.innerHTML = ''
+    finish.setAttribute('style', 'display: none;')
   })
   function getTask(index) {
     return [...task.children].indexOf(index)
@@ -77,7 +78,7 @@ export const trackingActiveClass = (() => {
       // Add the "Active" class to the clicked button
       e.target.classList.add('active')
       project.classList.add('c-active')
-      deleteTaskAll.style.display = 'block'
+
       new DisplayTask(
         projectStorage.getTaskOfList(
           trackingActiveClass.getIndexOfActiveTodo(),
@@ -97,7 +98,7 @@ export const trackingActiveClass = (() => {
       new DisplayTask(inboxStorage.getFinishedTask())
     } else if (project.classList.contains('c-active')) {
       new DisplayTask(projectStorage.getFinsihedList())
-      deleteTaskAll.style.display = 'none'
+      deleteTaskAll.style.display = 'block'
     }
   })
   backButton.addEventListener('click', () => {
@@ -109,7 +110,9 @@ export const trackingActiveClass = (() => {
       getText()
       deleteTaskAll.setAttribute('style', 'display: none')
     } else if (trackingActiveClass.projectContainingActive()) {
-      deleteTaskAll.style.display = 'block'
+      deleteTaskAll.style.display = 'none'
+
+      finish.setAttribute('style', 'display: block;')
       new DisplayTask(
         projectStorage.getTaskOfList(
           trackingActiveClass.getIndexOfActiveTodo(),
@@ -216,8 +219,9 @@ export class ProjectCreation {
   }
 
   removeList() {
+    const getList = document.querySelectorAll('.list')
+    projectStorage.removeList(Array.from(getList).indexOf(this.projectList))
     this.projectList.remove()
-    projectStorage.removeList(trackingActiveClass.getIndexOfActiveTodo)
   }
 
   submitList() {
@@ -237,14 +241,6 @@ export class ProjectCreation {
     }
   }
 
-  deleteTaskFromList() {
-    projectStorage.removeTaskOfList(
-      trackingActiveClass.getIndexOfActiveTodo,
-      trackingActiveClass.getButtonIndex
-    )
-    this.taskOfProjectInputContainer.remove()
-  }
-
   createTaskToList() {
     this.taskOfProjectInputContainer = document.createElement('div')
     this.taskOfProjectInputContainer.classList.add('container-of-project-task')
@@ -260,10 +256,7 @@ export class ProjectCreation {
     this.deleteTaskInput.addEventListener('click', () =>
       this.taskOfProjectInputContainer.remove()
     )
-    this.doneButton.addEventListener(
-      'click',
-      this.submitTaskToProject.bind(this)
-    )
+    this.doneButton.addEventListener('click', this.submitTaskToList.bind(this))
     //---
     this.taskOfButton = document.createElement('div')
 
@@ -271,10 +264,19 @@ export class ProjectCreation {
     this.taskOfButton.classList.add('set-active')
 
     this.deleteTaskButton = document.createElement('button')
-    this.deleteTaskButton.addEventListener(
-      'click',
-      this.deleteTaskFromList.bind(this)
-    )
+    this.deleteTaskButton.addEventListener('click', (event) => {
+      const list = this.deleteTaskButton.closest('.list')
+      const containerDiv = list.querySelectorAll('.container-of-project-task')
+      const taskContainer = event.target.closest('.container-of-project-task')
+      const taskIndex = Array.from(containerDiv).indexOf(taskContainer)
+
+      const getList = document.querySelectorAll('.list')
+      const listIndex = Array.from(getList).indexOf(this.projectList)
+
+      taskContainer.remove()
+      projectStorage.removeTaskOfList(listIndex, taskIndex)
+      document.querySelector('.task').textContent = ''
+    })
     this.icon = document.createElement('i')
     this.icon.classList.add('fa-solid', 'fa-xmark')
     this.deleteTaskButton.appendChild(this.icon)
@@ -288,7 +290,7 @@ export class ProjectCreation {
     this.projectList.appendChild(this.taskOfProjectInputContainer)
   }
 
-  submitTaskToProject() {
+  submitTaskToList() {
     if (this.taskOfProjectInput.value !== '') {
       this.deleteTaskInput.remove()
       this.enteredText = this.taskOfProjectInput.value
