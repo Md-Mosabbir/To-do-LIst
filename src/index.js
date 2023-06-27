@@ -23,14 +23,3 @@ addingButton.addEventListener('click', () => {
 
 export const addingProject = document.querySelector('#adding-project')
 addingProject.addEventListener('click', () => new ProjectCreation())
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Load project data
-  loadProjectData()
-
-  // Load inbox data
-  loadInboxData()
-
-  // Perform any additional actions after loading the data
-  // ...
-})
