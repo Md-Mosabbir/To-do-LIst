@@ -46,7 +46,9 @@ export const trackingActiveClass = (() => {
       inboxStorage.removeFinishTask()
     } else if (projectContainingActive()) {
       addingButton.style.display = 'none'
-      projectStorage.removeFinsihedList()
+      projectStorage.removeFinsihedList(
+        trackingActiveClass.getIndexOfActiveTodo()
+      )
     }
     deleteTaskAll.style.display = 'none'
     task.innerHTML = ''
@@ -97,7 +99,11 @@ export const trackingActiveClass = (() => {
       deleteTaskAll.style.display = 'block'
       new DisplayTask(inboxStorage.getFinishedTask())
     } else if (project.classList.contains('c-active')) {
-      new DisplayTask(projectStorage.getFinsihedList())
+      new DisplayTask(
+        projectStorage.getFinsihedList(
+          trackingActiveClass.getIndexOfActiveTodo()
+        )
+      )
       deleteTaskAll.style.display = 'block'
     }
   })
