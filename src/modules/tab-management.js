@@ -178,8 +178,8 @@ export const trackingActiveClass = (() => {
 export class CreateProjectInput {
   constructor() {
     // Create project input
-    this.project = document.createElement('div')
-    this.project.classList.add('list')
+    this.projectInput = document.createElement('div')
+    this.projectInput.classList.add('list')
 
     this.projectElementsContainer = document.createElement('div')
     this.projectElementsContainer.classList.add('project-nav')
@@ -202,7 +202,7 @@ export class CreateProjectInput {
     )
 
     this.deleteProjectButton.addEventListener('click', () =>
-      this.project.remove()
+      this.projectInput.remove()
     )
     // Appending everything
 
@@ -214,27 +214,79 @@ export class CreateProjectInput {
       .querySelector('.list-and-tasks-container')
       .appendChild(this.project)
   }
+
+  submitProject() {
+    projectStorage.addProject(this.projectNameInput.value)
+    this.displayProject(projectStorage.getAllProject())
+  }
+
+  displayProject(projects) {
+    const display = new DisplayProject(projects)
+  }
+}
+
+export class DisplayProject {
+  constructor(projects) {
+    this.projects = projects
+    const projectContainer = document.querySelector('.list-and-tasks-container')
+    projectContainer.innerHTML = ''
+    this.projects.forEach((project) => {
+      const projectCard = document.createElement('div')
+      projectCard.classList.add('list')
+
+      const projectElementsContainer = document.createElement('div')
+      projectElementsContainer.classList.add('project-nav')
+
+      this.displaySpan = document.createElement('h3')
+      this.displaySpan.textContent = project.name
+
+      this.addListButton = document.createElement('button') // add list
+      this.addListButton.classList.add('add-projects')
+      this.addListButton.innerHTML =
+        '<i class="fa-solid fa-plus" style="color: #000"></i>'
+
+      this.removeProjectAfterSubmit = document.createElement('button') // remove project all
+      this.removeProjectAfterSubmit.classList.add('remove-projects')
+      this.removeProjectAfterSubmit.innerHTML =
+        '<i class="fa-solid fa-xmark" style="color: #000"></i>'
+
+      projectElementsContainer.appendChild(this.displaySpan)
+      projectElementsContainer.appendChild(this.addListButton)
+      projectElementsContainer.appendChild(this.removeProjectAfterSubmit)
+      projectCard.appendChild(projectElementsContainer)
+
+      // Append Lists
+      this.projects.task.forEach((task) => {
+        const listDiv = document.createElement('div')
+
+        listDiv.classList.add('task-of-proj')
+        listDiv.classList.add('set-active')
+        this.textNode = document.createTextNode(task.name)
+        listDiv.appendChild(this.textNode)
+
+        listDiv.style.display = 'flex'
+        listDiv.setAttribute(
+          'style',
+          'display: flex; flex-direction: reverse-row; justify-content: start; align-items: center; gap: 0.8rem; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding: 10px;'
+        )
+
+        const deleteListButton = document.createElement('button') // delete list
+        deleteListButton.innerHTML =
+          '<i class="fa-solid fa-xmark" style="color: #000"></i>'
+        deleteListButton.setAttribute('style', 'min-width: 45px; height: 40px')
+        listDiv.appendChild(deleteListButton)
+        projectCard.appendChild(listDiv)
+      })
+
+      projectContainer.appendChild(projectCard)
+    })
+  }
 }
 export class ProjectCreation {
   constructor() {
-    this.displaySpan = document.createElement('h3')
-    this.displaySpan.style.display = 'none'
-
-    this.addListButton = document.createElement('button')
-    this.addListButton.classList.add('add-projects')
-    this.addListButton.innerHTML =
-      '<i class="fa-solid fa-plus" style="color: #000"></i>'
-    this.addListButton.style.display = 'none'
-
-    this.removeProjectAfterSubmit = document.createElement('button')
-    this.removeProjectAfterSubmit.classList.add('remove-projects')
-    this.removeProjectAfterSubmit.innerHTML =
-      '<i class="fa-solid fa-xmark" style="color: #000"></i>'
-    this.removeProjectAfterSubmit.style.display = 'none'
-
-    this.projectElementsContainer.appendChild(this.displaySpan)
-    this.projectElementsContainer.appendChild(this.addListButton)
-    this.projectElementsContainer.appendChild(this.removeProjectAfterSubmit)
+    // this.displaySpan.style.display = 'none'
+    // this.addListButton.style.display = 'none'
+    // this.removeProjectAfterSubmit.style.display = 'none'
 
     this.addListButton.addEventListener('click', this.createList.bind(this))
     this.removeProjectAfterSubmit.addEventListener(
@@ -252,7 +304,7 @@ export class ProjectCreation {
   submitProject() {
     if (this.projectNameInput.value !== '') {
       this.inputValue = this.projectNameInput.value
-      this.displaySpan.textContent = `${this.inputValue}`
+
       this.projectNameInput.style.display = 'none'
       this.addingProjectButton.style.display = 'none'
       this.removeProjectAfterSubmit.style.display = 'block'
@@ -283,12 +335,7 @@ export class ProjectCreation {
     )
     this.addingListButton.addEventListener('click', this.submitList.bind(this))
     //---
-    this.listDiv = document.createElement('div')
 
-    this.listDiv.classList.add('task-of-proj')
-    this.listDiv.classList.add('set-active')
-
-    this.deleteListButton = document.createElement('button')
     this.deleteListButton.addEventListener('click', (event) => {
       const list = this.deleteListButton.closest('.list')
       const containerDiv = list.querySelectorAll('.container-of-project-task')
@@ -305,7 +352,7 @@ export class ProjectCreation {
     this.icon = document.createElement('i')
     this.icon.classList.add('fa-solid', 'fa-xmark')
     this.deleteListButton.appendChild(this.icon)
-    this.deleteListButton.setAttribute('style', 'min-width: 45px; height: 40px')
+
     this.listDiv.appendChild(this.deleteListButton)
     this.listDiv.style.display = 'none'
     this.listContainer.appendChild(this.listInput)
@@ -318,15 +365,7 @@ export class ProjectCreation {
   submitList() {
     if (this.listInput.value !== '') {
       this.deleteListInput.remove()
-      this.enteredText = this.listInput.value
-      this.textNode = document.createTextNode(this.enteredText)
-      this.listDiv.appendChild(this.textNode)
-      this.listDiv.style.display = 'flex'
 
-      this.listDiv.setAttribute(
-        'style',
-        'display: flex; flex-direction: row; justify-content: start; align-items: center; gap: 0.8rem; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding: 10px;'
-      )
       this.addingListButton.remove()
       this.listInput.remove()
       const getList = document.querySelectorAll('.list')
