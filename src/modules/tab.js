@@ -1,4 +1,5 @@
-/* eslint-disable import/no-cycle */
+/* eslint-disable no-plusplus */
+
 /* eslint-disable consistent-return */
 
 export class TaskManager {
@@ -36,9 +37,8 @@ export class Inbox extends TaskManager {
   }
 }
 
-export class Project extends TaskManager {
+export class Project {
   constructor() {
-    super()
     this.projectArray = []
     this.finishedTasks = []
   }
@@ -69,9 +69,13 @@ export class Project extends TaskManager {
     }
   }
 
+  getAllProject() {
+    return this.projectArray
+  }
+
   getProject(index) {
     if (index >= 0 && index < this.projectArray.length) {
-      return this.projectArray[index]
+      return this.projectArray[index].task
     }
   }
 
@@ -80,9 +84,9 @@ export class Project extends TaskManager {
       indexOfProject >= 0 &&
       indexOfProject < this.projectArray.length &&
       indexOfTodo >= 0 &&
-      indexOfTodo < this.projectArray[indexOfProject].todos.length
+      indexOfTodo < this.projectArray[indexOfProject].task.length
     ) {
-      return this.projectArray[indexOfProject].todos[indexOfTodo]
+      return this.projectArray[indexOfProject].task[indexOfTodo].todos
     }
   }
 
@@ -183,18 +187,14 @@ export const projectStorage = (() => {
 
   const saveData = () => {
     const data = JSON.stringify(project)
-    localStorage.setItem('projectData', data)
+    localStorage.setItem('projectStorage', data)
   }
 
-  const loadData = () => {
-    const data = localStorage.getItem('projectData')
-    if (data) {
-      const parsedData = JSON.parse(data)
-      Object.assign(project, parsedData)
-    }
+  const data = localStorage.getItem('projectStorage')
+  if (data) {
+    const parsedData = JSON.parse(data)
+    Object.assign(project, parsedData)
   }
-
-  loadData()
 
   return {
     addProject: (projectName) => {
@@ -209,6 +209,7 @@ export const projectStorage = (() => {
       project.addTodoToList(indexOfProject, indexOfTodo, object)
       saveData()
     },
+    getAllProject: () => project.getAllProject(),
     getProject: (index) => project.getProject(index),
     getList: (indexOfProject, indexOfTodo) =>
       project.getList(indexOfProject, indexOfTodo),
