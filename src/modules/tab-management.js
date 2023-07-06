@@ -175,9 +175,9 @@ export const trackingActiveClass = (() => {
     getTask,
   }
 })()
-
-export class ProjectCreation {
+export class CreateProjectInput {
   constructor() {
+    // Create project input
     this.project = document.createElement('div')
     this.project.classList.add('list')
 
@@ -194,6 +194,29 @@ export class ProjectCreation {
     this.deleteProjectButton.innerHTML =
       '<i class="fa-solid fa-xmark" style="color: #000"></i>'
 
+    // Adding eventListeners
+
+    this.addingProjectButton.addEventListener(
+      'click',
+      this.submitProject.bind(this) // crerate the function
+    )
+
+    this.deleteProjectButton.addEventListener('click', () =>
+      this.project.remove()
+    )
+    // Appending everything
+
+    this.projectElementsContainer.appendChild(this.projectNameInput)
+    this.projectElementsContainer.appendChild(this.addingProjectButton)
+    this.projectElementsContainer.appendChild(this.deleteProjectButton)
+    this.project.appendChild(this.projectElementsContainer)
+    document
+      .querySelector('.list-and-tasks-container')
+      .appendChild(this.project)
+  }
+}
+export class ProjectCreation {
+  constructor() {
     this.displaySpan = document.createElement('h3')
     this.displaySpan.style.display = 'none'
 
@@ -209,28 +232,14 @@ export class ProjectCreation {
       '<i class="fa-solid fa-xmark" style="color: #000"></i>'
     this.removeProjectAfterSubmit.style.display = 'none'
 
-    this.projectElementsContainer.appendChild(this.projectNameInput)
-    this.projectElementsContainer.appendChild(this.addingProjectButton)
-    this.projectElementsContainer.appendChild(this.deleteProjectButton)
     this.projectElementsContainer.appendChild(this.displaySpan)
     this.projectElementsContainer.appendChild(this.addListButton)
     this.projectElementsContainer.appendChild(this.removeProjectAfterSubmit)
-    this.project.appendChild(this.projectElementsContainer)
 
-    document
-      .querySelector('.list-and-tasks-container')
-      .appendChild(this.project)
-    this.addingProjectButton.addEventListener(
-      'click',
-      this.submitProject.bind(this)
-    )
     this.addListButton.addEventListener('click', this.createList.bind(this))
     this.removeProjectAfterSubmit.addEventListener(
       'click',
       this.removeProject.bind(this)
-    )
-    this.deleteProjectButton.addEventListener('click', () =>
-      this.project.remove()
     )
   }
 
