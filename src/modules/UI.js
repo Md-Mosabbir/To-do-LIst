@@ -141,7 +141,7 @@ export class CreateTaskInput {
         const status = this.checkbox.checked
 
         const _task = new Todo(name, description, dueDate, priority, status)
-        inboxStorage.addTask(_task)
+        inboxStorage.addList(_task)
 
         this.displayTask(inboxStorage.getTasks())
 
@@ -164,7 +164,7 @@ export class CreateTaskInput {
           _task
         )
         this.displayTask(
-          projectStorage.getTaskOfList(
+          projectStorage.getList(
             trackingActiveClass.getIndexOfActiveTodo(),
             trackingActiveClass.getButtonIndex()
           )
@@ -183,7 +183,7 @@ export class DisplayTask {
   constructor(tasks) {
     this.tasks = tasks
 
-    const container = document.querySelector('.task') // Assuming you have a <div> element with id 'task-container' in your HTML file.
+    const container = document.querySelector('.task')
 
     // Clear the container before displaying the tasks
     container.innerHTML = ''
@@ -232,7 +232,6 @@ export class DisplayTask {
 
       this.deleteElement.addEventListener('click', () => {
         if (trackingActiveClass.inboxContainingActive()) {
-          console.log(trackingActiveClass.getTask(card))
           inboxStorage.removeTask(trackingActiveClass.getTask(card))
         } else if (trackingActiveClass.projectContainingActive()) {
           projectStorage.removeTodoFromList(
