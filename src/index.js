@@ -11,9 +11,13 @@ import '@fortawesome/fontawesome-free/js/all.js'
 import { CreateTaskInput, DisplayTask } from './modules/UI'
 // eslint-disable-next-line no-unused-vars
 import { inboxStorage, projectStorage } from './modules/tab'
-import { loadProjectData, loadInboxData } from './modules/storage'
 
-import { trackingActiveClass, ProjectCreation } from './modules/tab-management'
+import {
+  trackingActiveClass,
+  CreateListInput,
+  CreateProjectInput,
+  DisplayProject,
+} from './modules/tab-management'
 
 export const addingButton = document.getElementById('adding-button')
 addingButton.addEventListener('click', () => {
@@ -22,4 +26,9 @@ addingButton.addEventListener('click', () => {
 })
 
 export const addingProject = document.querySelector('#adding-project')
-addingProject.addEventListener('click', () => new ProjectCreation())
+addingProject.addEventListener('click', () => new CreateProjectInput())
+
+document.addEventListener('DOMContentLoaded', () => {
+  new DisplayTask(inboxStorage.getTasks())
+  new DisplayProject(projectStorage.getAllProject())
+})
