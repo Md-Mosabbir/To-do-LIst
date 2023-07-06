@@ -101,7 +101,7 @@ export const trackingActiveClass = (() => {
       new DisplayTask(inboxStorage.getFinishedTask())
     } else if (project.classList.contains('c-active')) {
       new DisplayTask(
-        projectStorage.getFinsihedList(
+        projectStorage.getFinishedList(
           trackingActiveClass.getIndexOfActiveTodo()
         )
       )
@@ -179,7 +179,7 @@ export class CreateProjectInput {
   constructor() {
     // Create project input
     this.projectInput = document.createElement('div')
-    this.projectInput.classList.add('list')
+    this.projectInput.classList.add('project-input')
 
     this.projectElementsContainer = document.createElement('div')
     this.projectElementsContainer.classList.add('project-nav')
@@ -209,14 +209,15 @@ export class CreateProjectInput {
     this.projectElementsContainer.appendChild(this.projectNameInput)
     this.projectElementsContainer.appendChild(this.addingProjectButton)
     this.projectElementsContainer.appendChild(this.deleteProjectButton)
-    this.project.appendChild(this.projectElementsContainer)
+    this.projectInput.appendChild(this.projectElementsContainer)
     document
       .querySelector('.list-and-tasks-container')
-      .appendChild(this.project)
+      .appendChild(this.projectInput)
   }
 
   submitProject() {
     projectStorage.addProject(this.projectNameInput.value)
+    this.projectInput.remove()
     this.displayProject(projectStorage.getAllProject())
   }
 
@@ -240,37 +241,65 @@ export class DisplayProject {
       this.displaySpan = document.createElement('h3')
       this.displaySpan.textContent = project.name
 
-      this.addListButton = document.createElement('button') // add list
-      this.addListButton.classList.add('add-projects')
-      this.addListButton.innerHTML =
+      const addListButton = document.createElement('button') // add list
+      addListButton.classList.add('add-projects')
+      addListButton.innerHTML =
         '<i class="fa-solid fa-plus" style="color: #000"></i>'
+      addListButton.addEventListener('click', () => {
+        new CreateListInput(projectCard)
+      })
 
-      this.removeProjectAfterSubmit = document.createElement('button') // remove project all
-      this.removeProjectAfterSubmit.classList.add('remove-projects')
-      this.removeProjectAfterSubmit.innerHTML =
+      const removeProjectAfterSubmit = document.createElement('button') // remove project all
+      removeProjectAfterSubmit.classList.add('remove-projects')
+      removeProjectAfterSubmit.innerHTML =
         '<i class="fa-solid fa-xmark" style="color: #000"></i>'
 
+      removeProjectAfterSubmit.addEventListener('click', () => {
+        const getList = document.querySelectorAll('.list')
+        projectStorage.removeProject(Array.from(getList).indexOf(projectCard))
+        new DisplayProject(projectStorage.getAllProject())
+      })
+
       projectElementsContainer.appendChild(this.displaySpan)
-      projectElementsContainer.appendChild(this.addListButton)
-      projectElementsContainer.appendChild(this.removeProjectAfterSubmit)
+      projectElementsContainer.appendChild(addListButton)
+      projectElementsContainer.appendChild(removeProjectAfterSubmit)
       projectCard.appendChild(projectElementsContainer)
 
       // Append Lists
-      this.projects.task.forEach((task) => {
+      project.task.forEach((tasks) => {
         const listDiv = document.createElement('div')
+        listDiv.classList.add('container-of-project-task')
 
         listDiv.classList.add('task-of-proj')
         listDiv.classList.add('set-active')
-        this.textNode = document.createTextNode(task.name)
+        this.textNode = document.createTextNode(tasks.name)
         listDiv.appendChild(this.textNode)
 
         listDiv.style.display = 'flex'
         listDiv.setAttribute(
           'style',
-          'display: flex; flex-direction: reverse-row; justify-content: start; align-items: center; gap: 0.8rem; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding: 10px;'
+          'display: flex; flex-direction: row-reverse; justify-content: start; align-items: center; gap: 0.8rem; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding: 10px;'
         )
 
         const deleteListButton = document.createElement('button') // delete list
+        deleteListButton.addEventListener('click', (event) => {
+          const list = deleteListButton.closest('.list')
+          const containerDiv = list.querySelectorAll(
+            '.container-of-project-task'
+          )
+          const taskContainer = event.target.closest(
+            '.container-of-project-task'
+          )
+          const taskIndex = Array.from(containerDiv).indexOf(taskContainer)
+
+          const getList = document.querySelectorAll('.list')
+          const listIndex = Array.from(getList).indexOf(list)
+
+          taskContainer.remove()
+          projectStorage.removeList(listIndex, taskIndex)
+          document.querySelector('.task').textContent = ''
+        })
+
         deleteListButton.innerHTML =
           '<i class="fa-solid fa-xmark" style="color: #000"></i>'
         deleteListButton.setAttribute('style', 'min-width: 45px; height: 40px')
@@ -282,84 +311,30 @@ export class DisplayProject {
     })
   }
 }
-export class ProjectCreation {
-  constructor() {
-    // this.displaySpan.style.display = 'none'
-    // this.addListButton.style.display = 'none'
-    // this.removeProjectAfterSubmit.style.display = 'none'
 
-    this.addListButton.addEventListener('click', this.createList.bind(this))
-    this.removeProjectAfterSubmit.addEventListener(
-      'click',
-      this.removeProject.bind(this)
-    )
-  }
+export class CreateListInput {
+  constructor(currentProject) {
+    this.currentProject = currentProject
+    this.listInputContainer = document.createElement('div')
+    this.listInputContainer.classList.add('container-of-project-input')
 
-  removeProject() {
-    const getList = document.querySelectorAll('.list')
-    projectStorage.removeProject(Array.from(getList).indexOf(this.project))
-    this.project.remove()
-  }
-
-  submitProject() {
-    if (this.projectNameInput.value !== '') {
-      this.inputValue = this.projectNameInput.value
-
-      this.projectNameInput.style.display = 'none'
-      this.addingProjectButton.style.display = 'none'
-      this.removeProjectAfterSubmit.style.display = 'block'
-      this.deleteProjectButton.remove()
-      this.projectNameInput.remove()
-      this.addingProjectButton.remove()
-
-      this.displaySpan.style.display = 'block'
-      this.addListButton.style.display = 'inline-block'
-      projectStorage.addProject(this.inputValue)
-    }
-  }
-
-  createList() {
-    this.listContainer = document.createElement('div')
-    this.listContainer.classList.add('container-of-project-task')
-    //-----
     this.listInput = document.createElement('input')
     this.listInput.required = true
     this.addingListButton = document.createElement('button')
-    this.addingListButton.appendChild(this.plusIcon)
+    this.addingListButton.innerHTML =
+      '<i class="fa-solid fa-plus" style="color: #000"></i>'
+    this.addingListButton.addEventListener('click', this.submitList.bind(this))
 
     this.deleteListInput = document.createElement('button')
-    this.deleteListInput.appendChild(this.crossIcon)
-    // -------
+    this.deleteListInput.innerHTML =
+      '<i class="fa-solid fa-xmark" style="color: #000"></i>'
     this.deleteListInput.addEventListener('click', () =>
       this.listContainer.remove()
     )
-    this.addingListButton.addEventListener('click', this.submitList.bind(this))
-    //---
-
-    this.deleteListButton.addEventListener('click', (event) => {
-      const list = this.deleteListButton.closest('.list')
-      const containerDiv = list.querySelectorAll('.container-of-project-task')
-      const taskContainer = event.target.closest('.container-of-project-task')
-      const taskIndex = Array.from(containerDiv).indexOf(taskContainer)
-
-      const getList = document.querySelectorAll('.list')
-      const listIndex = Array.from(getList).indexOf(this.project)
-
-      taskContainer.remove()
-      projectStorage.removeList(listIndex, taskIndex)
-      document.querySelector('.task').textContent = ''
-    })
-    this.icon = document.createElement('i')
-    this.icon.classList.add('fa-solid', 'fa-xmark')
-    this.deleteListButton.appendChild(this.icon)
-
-    this.listDiv.appendChild(this.deleteListButton)
-    this.listDiv.style.display = 'none'
-    this.listContainer.appendChild(this.listInput)
-    this.listContainer.appendChild(this.addingListButton)
-    this.listContainer.appendChild(this.listDiv)
-    this.listContainer.appendChild(this.deleteListInput)
-    this.project.appendChild(this.listContainer)
+    this.listInputContainer.appendChild(this.listInput)
+    this.listInputContainer.appendChild(this.addingListButton)
+    this.listInputContainer.appendChild(this.deleteListInput)
+    this.currentProject.appendChild(this.listInputContainer)
   }
 
   submitList() {
@@ -370,9 +345,61 @@ export class ProjectCreation {
       this.listInput.remove()
       const getList = document.querySelectorAll('.list')
       projectStorage.addList(
-        Array.from(getList).indexOf(this.project),
-        this.enteredText
+        Array.from(getList).indexOf(this.currentProject),
+        this.listInput.value
       )
+      new DisplayProject(projectStorage.getAllProject())
     }
   }
 }
+
+// export class ProjectCreation {
+//   constructor() {
+//     // this.displaySpan.style.display = 'none'
+//     // this.addListButton.style.display = 'none'
+//     // this.removeProjectAfterSubmit.style.display = 'none'
+
+//     this.addListButton.addEventListener('click', this.createList.bind(this))
+//     this.removeProjectAfterSubmit.addEventListener(
+//       'click',
+//       this.removeProject.bind(this)
+//     )
+//   }
+
+//   submitProject() {
+//     if (this.projectNameInput.value !== '') {
+//       this.inputValue = this.projectNameInput.value
+
+//       this.projectNameInput.style.display = 'none'
+//       this.addingProjectButton.style.display = 'none'
+//       this.removeProjectAfterSubmit.style.display = 'block'
+//       this.deleteProjectButton.remove()
+//       this.projectNameInput.remove()
+//       this.addingProjectButton.remove()
+
+//       this.displaySpan.style.display = 'block'
+//       this.addListButton.style.display = 'inline-block'
+//       projectStorage.addProject(this.inputValue)
+//     }
+//   }
+
+//   createList() {
+//     //-----
+
+//     // -------
+
+//     //---
+
+//     this.icon = document.createElement('i')
+//     this.icon.classList.add('fa-solid', 'fa-xmark')
+//     this.deleteListButton.appendChild(this.icon)
+
+//     this.listDiv.appendChild(this.deleteListButton)
+//     this.listDiv.style.display = 'none'
+//     this.listContainer.appendChild(this.listInput)
+//     this.listContainer.appendChild(this.addingListButton)
+//     this.listContainer.appendChild(this.listDiv)
+//     this.listContainer.appendChild(this.deleteListInput)
+//     this.project.appendChild(this.listContainer)
+//   }
+// }
