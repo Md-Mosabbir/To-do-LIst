@@ -12,6 +12,12 @@ export class TaskManager {
     this.tasks.push(obj)
   }
 
+  editTask(taskIndex, newTask) {
+    if (taskIndex >= 0 && taskIndex < this.tasks.length) {
+      this.tasks[taskIndex] = newTask
+    }
+  }
+
   removeTask(taskIndex) {
     if (taskIndex >= 0 && taskIndex < this.tasks.length) {
       this.tasks.splice(taskIndex, 1)
@@ -66,6 +72,20 @@ export class Project {
       const list = this.projectArray[indexOfProject]
       const todo = list.task[indexOfTodo]
       todo.todos.push(object)
+    }
+  }
+
+  editProjectTodo(projectIndex, taskIndex, todoIndex, updatedTodo) {
+    if (
+      projectIndex >= 0 &&
+      projectIndex < this.projectArray.length &&
+      taskIndex >= 0 &&
+      taskIndex < this.projectArray[projectIndex].task.length &&
+      todoIndex >= 0 &&
+      todoIndex < this.projectArray[projectIndex].task[taskIndex].todos.length
+    ) {
+      this.projectArray[projectIndex].task[taskIndex].todos[todoIndex] =
+        updatedTodo
     }
   }
 
@@ -166,10 +186,16 @@ export const inboxStorage = (() => {
       saveData()
     },
     getTasks: () => inbox.tasks,
+    editTask: (taskIndex, newTask) => {
+      inbox.editTask(taskIndex, newTask)
+      saveData()
+    },
+
     removeTask: (taskIndex) => {
       inbox.removeTask(taskIndex)
       saveData()
     },
+
     finishTask: (taskIndex) => {
       inbox.finishTask(taskIndex)
       saveData()
@@ -207,6 +233,10 @@ export const projectStorage = (() => {
     },
     addTodoToList: (indexOfProject, indexOfTodo, object) => {
       project.addTodoToList(indexOfProject, indexOfTodo, object)
+      saveData()
+    },
+    editProjectTodo: (projectIndex, taskIndex, todoIndex, updatedTodo) => {
+      project.editProjectTodo(projectIndex, taskIndex, todoIndex, updatedTodo)
       saveData()
     },
     getAllProject: () => project.getAllProject(),
