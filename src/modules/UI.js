@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable no-param-reassign */
 /* eslint-disable consistent-return */
 /* eslint-disable no-new */
@@ -228,7 +229,8 @@ export class DisplayTask {
 
       this.deleteElement = document.createElement('button')
       this.deleteElement.classList.add('task-delete')
-      this.deleteElement.textContent = 'X'
+      this.deleteElement.innerHTML =
+        '<i class="fa-solid fa-xmark" style="color: #fff"></i>'
 
       this.deleteElement.addEventListener('click', () => {
         if (trackingActiveClass.inboxContainingActive()) {
@@ -244,8 +246,17 @@ export class DisplayTask {
         card.remove()
       })
 
+      this.editElement = document.createElement('button')
+      this.editElement.classList.add('task-edit')
+      this.editElement.innerHTML =
+        '<i class="fa-solid fa-edit" style="color: #fff"></i>'
+      this.editElement.addEventListener('click', () => {
+        new EditTask(task, trackingActiveClass.getTask(card))
+      })
+
       if (task.status === false) {
         card.appendChild(this.statusElement)
+
         card.appendChild(this.deleteElement)
       } else if (
         task.status === true &&
@@ -265,11 +276,124 @@ export class DisplayTask {
       card.appendChild(this.nameElement)
       card.appendChild(this.descriptionElement)
       card.appendChild(this.dueDateElement)
+
       if (task.status === false) {
+        card.appendChild(this.editElement)
         card.appendChild(this.deleteElement)
       }
 
       container.appendChild(card)
     })
+  }
+}
+
+export class EditTask {
+  constructor(task, index) {
+    this.index = index
+    this.task = task
+
+    this.form = document.createElement('div')
+    this.form.classList.add('form-container')
+
+    this.nameLabel = document.createElement('label')
+    this.nameLabel.textContent = 'Name:'
+    this.nameInput = document.createElement('input')
+    this.nameInput.type = 'text'
+    this.nameInput.value = this.task.name
+    this.nameLabel.appendChild(this.nameInput)
+
+    this.descriptionLabel = document.createElement('label')
+    this.descriptionLabel.textContent = 'Description:'
+    this.descriptionInput = document.createElement('input')
+    this.descriptionInput.type = 'text'
+    this.descriptionInput.value = this.task.description
+    this.descriptionLabel.appendChild(this.descriptionInput)
+
+    this.dueDateLabel = document.createElement('label')
+    this.dueDateLabel.textContent = 'Due Date:'
+    this.dueDateInput = document.createElement('input')
+    this.dueDateInput.type = 'date'
+    this.dueDateInput.min = new Date().toISOString().split('T')[0]
+    this.dueDateInput.value = this.task.dueDate
+    this.dueDateLabel.appendChild(this.dueDateInput)
+
+    this.priorityLabel = document.createElement('label')
+    this.priorityLabel.textContent = 'Priority:'
+    this.priorityInput = document.createElement('select')
+    this.priorityInput.innerHTML = `
+    <option value="Low" ${
+      this.task.priority === 'Low' ? 'selected' : ''
+    }>Low</option>
+    <option value="Medium" ${
+      this.task.priority === 'Medium' ? 'selected' : ''
+    }>Medium</option>
+    <option value="High" ${
+      this.task.priority === 'High' ? 'selected' : ''
+    }>High</option>
+    `
+    this.priorityLabel.appendChild(this.priorityInput)
+
+    this.submitButton = document.createElement('button')
+    this.submitButton.addEventListener('click', this.submitEdit.bind(this))
+    this.submitButton.type = 'submit'
+    this.submitButton.textContent = 'Submit'
+
+    this.cancelButton = document.createElement('button')
+    this.cancelButton.textContent = 'Cancel'
+    this.cancelButton.addEventListener('click', () => {
+      overlay.setAttribute('style', 'display: none;')
+      this.form.remove()
+    })
+
+    this.form.appendChild(this.nameLabel)
+    this.form.appendChild(this.descriptionLabel)
+    this.form.appendChild(this.dueDateLabel)
+    this.form.appendChild(this.priorityLabel)
+    this.form.appendChild(this.submitButton)
+    this.form.appendChild(this.cancelButton)
+
+    document.body.appendChild(this.form)
+    const overlay = document.querySelector('.overlay')
+    overlay.setAttribute('style', 'display: block;')
+  }
+
+  submitEdit() {
+    const overlay = document.querySelector('.overlay')
+    const newName = this.nameInput.value
+    const newDesc = this.descriptionInput.value
+    const newDate = this.dueDateInput.value
+    const newPriority = this.priorityInput.value
+
+    const _newTask = new Todo(newName, newDesc, newDate, newPriority, false)
+
+    if (trackingActiveClass.inboxContainingActive() && this.checkInput()) {
+      inboxStorage.editTask(this.index, _newTask)
+      new DisplayTask(inboxStorage.getTasks())
+    } else if (
+      trackingActiveClass.projectContainingActive() &&
+      this.checkInput()
+    ) {
+      projectStorage.editProjectTodo(
+        trackingActiveClass.getIndexOfActiveTodo(),
+        trackingActiveClass.getButtonIndex(),
+        this.index,
+        _newTask
+      )
+      new DisplayTask(
+        projectStorage.getList(
+          trackingActiveClass.getIndexOfActiveTodo(),
+          trackingActiveClass.getButtonIndex()
+        )
+      )
+    }
+
+    this.form.remove()
+    overlay.setAttribute('style', 'display: none;')
+  }
+
+  checkInput() {
+    if (this.nameInput.value !== '' && this.dueDateInput.value !== '') {
+      return true
+    }
   }
 }
