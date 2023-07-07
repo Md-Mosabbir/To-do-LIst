@@ -20,13 +20,19 @@ import {
 } from './modules/tab-management'
 
 export const addingButton = document.getElementById('adding-button')
-addingButton.addEventListener('click', () => {
-  new CreateTaskInput()
-  addingButton.style.display = 'none'
-})
 
 export const addingProject = document.querySelector('#adding-project')
-addingProject.addEventListener('click', () => new CreateProjectInput())
+addingProject.addEventListener('click', () => {
+  new CreateProjectInput()
+
+  addingProject.style.display = 'none'
+})
+
+addingButton.addEventListener('click', () => {
+  new CreateTaskInput()
+  addingProject.style.display = 'flex'
+  addingButton.style.display = 'none'
+})
 
 document.addEventListener('DOMContentLoaded', () => {
   new DisplayTask(inboxStorage.getTasks())
