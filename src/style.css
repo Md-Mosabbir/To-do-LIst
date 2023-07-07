@@ -7,14 +7,14 @@
   border: none;
   text-decoration: none;
   box-sizing: border-box;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 html,
 body {
-height: 100vh;
+  height: 100%;
 }
 
-
-#back-button{
+#back-button {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -30,37 +30,38 @@ height: 100vh;
   padding: 20px;
   gap: 1rem;
   border-bottom: 1px solid black;
-
-
-  
 }
 .title-back button {
   background-color: transparent;
   font-size: 20px;
 }
-.title-back h1{
+.title-back h1 {
   margin-right: auto;
   font-size: 50px;
 }
 
-
-
 :root {
-  --primary-color: #213363;     
-  --secondary-color: #17594A;   
-  --accent-color: #FFD700;      
+  --primary-color: #0056b3; /* Vibrant Blue */
+  --secondary-color: #ff8c00; /* Energetic Orange */
+  --accent-color: #f9bc02; /* Uplifting Yellow */
+  --neutral-black: #000000;
+  --neutral-white: #ffffff;
+  --nav-bar-bg: hsl(0, 0%, 98%);
 }
-
 
 input {
   outline: none;
   padding: 10px;
+  height: 35px;
+  border-radius: 7px;
+  font-size: large;
 }
 
-.side-nav-container{
-  background-color: darkblue;
-  width: 25%;
-  min-width: 440px; 
+/* SIDE NAVIGATION BUTTON -------------------*/
+
+.side-nav-container {
+  min-width: 33%;
+
   height: 100vh;
   float: left;
   margin-right: 15px;
@@ -68,81 +69,35 @@ input {
 
 nav {
   padding-top: 70px;
-  background-color: aliceblue;
+  background-color: var(--nav-bar-bg);
   width: 100%;
   height: 100vh;
   display: flex;
   gap: 5rem;
   flex-direction: column;
-  
 }
-
-.inbox , .projects-button { 
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: #17594A;
-  width: 85%;
-  margin: 0 auto;
-
-}
-
-.project-nav input, .container-of-project-task input {
-  
-  height: 35px;
-  border-radius: 7px;
-  font-size: large;
-  
-
-}
-.project-nav button, .container-of-project-task button {
-  padding: 10px;
-  border-radius: 7px;
-}
-
-.inbox button, .projects-button button{
-  display: flex;
-  background-color: transparent;
-  gap: 0.5rem;
-  font-size: larger;
-
-}
-
+.inbox,
 .projects-button {
-  background-color: #213363;
+  padding: 15px;
+  border-radius: 10px;
+  width: 85%;
+  margin: 10px auto;
+  background-color: var(--accent-color);
+
   display: flex;
   justify-content: space-between;
-  
 }
+
+.inbox button,
 .projects-button button {
   display: flex;
-  align-items: center;
-}
-.projects-button button:hover{
-  color: pink;
-}
+  background-color: transparent;
 
-#adding-project {
-  font-size: 30px;
-
+  gap: 0.5rem;
+  font-size: larger;
 }
 
-.active {
-  background-color: white;
-}
-
-.list-and-tasks-container{
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  margin-top: 30px;
-  width: 90%;
-  
-}
-
-.my-projects{
+.my-projects {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -151,25 +106,70 @@ nav {
   align-items: center;
 }
 
-.list {
-  background-color: #17594A;
+.project-input {
+  background-color: var(--primary-color);
   border-radius: 5px;
   width: 95%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  /* justify-content: center; */
+  justify-content: center;
   align-items: center;
 }
-.container-of-project-task{
+
+.container-of-project-input {
+  display: flex;
+  background-color: var(--primary-color);
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.project-nav button,
+.container-of-project-input button {
+  padding: 10px;
+  border-radius: 7px;
+}
+
+/* LIST OF PROJECT  */
+
+.list-and-tasks-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 30px;
+  width: 90%;
+}
+
+.list {
+  background-color: var(--secondary-color);
+  border-radius: 10px;
+  width: 95%;
+  margin: 5px auto;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  align-items: center;
+}
+
+.container-of-project-task {
   width: 100%;
   display: flex;
   justify-content: center;
-  
 }
 
-.task-of-proj.set-active{
+.task-of-proj.set-active {
   padding: 5px;
   font-size: 25px;
   text-align: left;
@@ -178,20 +178,18 @@ nav {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  
 }
-.project-nav{
-    
-    
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.3rem;
-    width: 100%;
+.project-nav {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.3rem;
+  width: 100%;
 }
 
-.project-nav input,.container-of-project-task input {
+.project-nav input,
+.container-of-project-task input {
   margin-right: auto;
   width: 100%;
   min-width: 70px;
@@ -212,36 +210,17 @@ nav {
   white-space: nowrap;
 }
 
-.project-nav button, .container-of-project-task button{
+.project-nav button,
+.container-of-project-input button,
+.container-of-project-task button {
   width: 45px;
   border-radius: 10px;
 }
+/* ----------------------------------- */
 
+/* ----------------------------------- */
 
-.adding-task-button{
-  position: absolute;
-  margin: 10px;
-  bottom: 0;
-  
-  
-}
-
-#adding-button{
-  width: 65px;
-  height: 65px;
-  border-radius: 50%;
-  font-size: 50px;
-  background-color: #000000;
-}
-
-
-
-.container-of-hero{
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
+/* TASK CARD ------------------------- */
 
 .task {
   margin-top: 20px;
@@ -250,10 +229,9 @@ nav {
   align-items: flex-start;
   width: 100%;
   height: 100%;
-  
+
   padding: 20px;
   border-radius: 8px;
-  
 }
 
 .task-card {
@@ -267,10 +245,9 @@ nav {
   border-radius: 8px;
   margin-bottom: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
 }
 
-.task-card input[type="checkbox"] {
+.task-card input[type='checkbox'] {
   appearance: none;
   width: 20px;
   height: 20px;
@@ -282,25 +259,25 @@ nav {
   transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
-.task-card input[type="checkbox"]:checked {
+.task-card input[type='checkbox']:checked {
   background-color: #007aff;
   border-color: #007aff;
 }
 
 .task-priority {
-  width: 16px;
-  height: 16px;
+  min-width: 10px;
+  min-height: 10px;
   margin-right: 10px;
   border-radius: 50%;
   transition: background-color 0.3s ease-in-out;
 }
 
 .task-priority.low {
-  background-color: #47b275;
+  background-color: #ffff00;
 }
 
 .task-priority.medium {
-  background-color: #f9c22e;
+  background-color: #ffa500;
 }
 
 .task-priority.high {
@@ -324,19 +301,18 @@ nav {
   text-overflow: ellipsis;
   width: 190px;
   overflow: hidden;
-  
 }
 
 .task-due-date {
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   color: #000000;
   margin-left: auto;
   margin-right: 10px;
-  font-size: 20px;
 }
 
-.task-delete {
+.task-delete,
+.task-edit {
   padding: 6px 12px;
   background-color: #e74c3c;
   border: none;
@@ -348,9 +324,17 @@ nav {
   margin-left: auto;
 }
 
+.task-edit {
+  background-color: var(--neutral-black);
+}
+
 .task-delete:hover {
   background-color: #c0392b;
 }
+
+/* ----------------------------------- */
+
+/* INPUT FORM ------------------ */
 
 .input-div {
   display: flex;
@@ -365,7 +349,7 @@ nav {
   height: 80px;
 }
 
-.input-div input[type="checkbox"] {
+.input-div input[type='checkbox'] {
   appearance: none;
   width: 20px;
   height: 20px;
@@ -377,16 +361,16 @@ nav {
   transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
-.input-div input[type="checkbox"]:checked {
+.input-div input[type='checkbox']:checked {
   background-color: #007aff;
   border-color: #007aff;
 }
 
-.input-div input[type="text"],
-.input-div input[type="date"],
+.input-div input[type='text'],
+.input-div input[type='date'],
 .input-div select {
   padding: 10px;
-  margin-right: 10px;
+  min-width: 19px;
   border: none;
   background-color: #f5f5f5;
   border-radius: 4px;
@@ -394,7 +378,7 @@ nav {
 
 .input-div button {
   padding: 10px 20px;
-  
+
   border: none;
   border-radius: 4px;
   color: #ffffff;
@@ -407,8 +391,33 @@ nav {
 .input-div button:hover {
   background-color: #000000;
 }
+/* -------------------------------- */
 
+.active {
+  background-color: var(--neutral-white);
+  filter: drop-shadow(0px 1px 4px var(--neutral-black));
+}
 
+.adding-task-button {
+  position: absolute;
+  margin: 10px;
+  bottom: 0;
+}
+
+#adding-button {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  font-size: 50px;
+  background-color: #000000;
+}
+
+.container-of-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 
 .hamburger {
   display: none;
@@ -416,7 +425,6 @@ nav {
   height: 20px;
   cursor: pointer;
   z-index: 5;
-  
 }
 
 .line {
@@ -427,32 +435,99 @@ nav {
   transition: transform 0.2s;
 }
 
+/* ---------------------EDIT TASK -------------------------- \*/
+.form-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: flex-start;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 20px;
+  min-width: 300px;
+  max-width: 100%;
+  z-index: 40;
+}
 
+.form-container label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 14px;
+  width: 100%;
+}
 
+.form-container input[type='text'],
+.form-container input[type='date'],
+.form-container select {
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
 
+.form-container select {
+  appearance: none;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  width: 100%;
+}
 
+.form-container button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 14px;
+  background-color: #007aff;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  width: 100%;
+}
 
+.form-container button:hover {
+  background-color: #000000;
+}
 
-@media (max-width: 1800px) {
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.6);
+  z-index: 10;
+}
+
+/* -------------------------------------------------------- */
+
+@media (max-width: 950px) {
   .hamburger {
     display: block;
   }
   .hamburger.clicked .line:nth-child(1) {
     transform: rotate(45deg) translate(6px, 6px);
   }
-  
+
   .hamburger.clicked .line:nth-child(2) {
     opacity: 0;
   }
-  
+
   .hamburger.clicked .line:nth-child(3) {
     transform: rotate(-45deg) translate(5px, -5px);
   }
   .side-nav-container {
     display: none;
-    
   }
-  .side-nav-container.clicked{
+  .side-nav-container.clicked {
     position: absolute;
     display: block;
     width: 100%;
@@ -461,25 +536,27 @@ nav {
     height: 100%;
     overflow-y: auto;
   }
-  nav{
+  nav {
     overflow-y: auto;
     padding: 100px 10px;
   }
 
-  .title-back h1{
+  .title-back h1 {
     font-size: 30px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     width: 200px;
   }
-  
 }
 
+@media (min-width: 1400px) {
+  .side-nav-container {
+    min-width: 410px;
+  }
+}
 
-
-
-@media only screen and (max-width: 1100px) {
+@media only screen and (max-width: 1400px) {
   .input-div {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -489,12 +566,10 @@ nav {
     height: auto;
   }
 
-  .input-div input[type="text"],
+  .input-div input[type='text'],
   .input-div select {
     width: 100%;
   }
-
-
 }
 
 /* Styles for mobile devices */
@@ -547,7 +622,7 @@ nav {
   .task-delete {
     grid-column: 4;
     justify-self: end;
-    
+
     cursor: pointer;
   }
 }
