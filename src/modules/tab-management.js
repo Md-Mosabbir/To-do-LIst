@@ -12,7 +12,7 @@
 import { inboxStorage, projectStorage } from './tab'
 
 import { DisplayTask } from './UI'
-import { addingButton } from '..'
+import { addingButton, addingProject } from '..'
 
 // manage active class holder projects switching and creation
 
@@ -201,9 +201,10 @@ export class CreateProjectInput {
       this.submitProject.bind(this) // crerate the function
     )
 
-    this.deleteProjectButton.addEventListener('click', () =>
+    this.deleteProjectButton.addEventListener('click', () => {
       this.projectInput.remove()
-    )
+      addingProject.setAttribute('style', 'display:flex;')
+    })
     // Appending everything
 
     this.projectElementsContainer.appendChild(this.projectNameInput)
@@ -216,9 +217,12 @@ export class CreateProjectInput {
   }
 
   submitProject() {
-    projectStorage.addProject(this.projectNameInput.value)
-    this.projectInput.remove()
-    this.displayProject(projectStorage.getAllProject())
+    if (this.projectNameInput.value !== '') {
+      projectStorage.addProject(this.projectNameInput.value)
+      this.projectInput.remove()
+      addingProject.setAttribute('style', 'display:flex;')
+      this.displayProject(projectStorage.getAllProject())
+    }
   }
 
   displayProject(projects) {
@@ -247,6 +251,7 @@ export class DisplayProject {
         '<i class="fa-solid fa-plus" style="color: #000"></i>'
       addListButton.addEventListener('click', () => {
         new CreateListInput(projectCard)
+        addingProject.setAttribute('style', 'display:none;')
       })
 
       const removeProjectAfterSubmit = document.createElement('button') // remove project all
@@ -278,7 +283,7 @@ export class DisplayProject {
         listDiv.style.display = 'flex'
         listDiv.setAttribute(
           'style',
-          'display: flex; flex-direction: row-reverse; justify-content: start; align-items: center; gap: 0.8rem; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding: 10px;'
+          'display: flex; flex-direction: row-reverse; justify-content: start; align-items: center; gap: 0.8rem; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding: 10px; font-size: 20px;'
         )
 
         const deleteListButton = document.createElement('button') // delete list
@@ -328,9 +333,10 @@ export class CreateListInput {
     this.deleteListInput = document.createElement('button')
     this.deleteListInput.innerHTML =
       '<i class="fa-solid fa-xmark" style="color: #000"></i>'
-    this.deleteListInput.addEventListener('click', () =>
-      this.listContainer.remove()
-    )
+    this.deleteListInput.addEventListener('click', () => {
+      addingProject.setAttribute('style', 'display:flex;')
+      this.listInputContainer.remove()
+    })
     this.listInputContainer.appendChild(this.listInput)
     this.listInputContainer.appendChild(this.addingListButton)
     this.listInputContainer.appendChild(this.deleteListInput)
@@ -339,6 +345,8 @@ export class CreateListInput {
 
   submitList() {
     if (this.listInput.value !== '') {
+      addingProject.setAttribute('style', 'display:flex;')
+
       this.deleteListInput.remove()
 
       this.addingListButton.remove()
@@ -352,54 +360,3 @@ export class CreateListInput {
     }
   }
 }
-
-// export class ProjectCreation {
-//   constructor() {
-//     // this.displaySpan.style.display = 'none'
-//     // this.addListButton.style.display = 'none'
-//     // this.removeProjectAfterSubmit.style.display = 'none'
-
-//     this.addListButton.addEventListener('click', this.createList.bind(this))
-//     this.removeProjectAfterSubmit.addEventListener(
-//       'click',
-//       this.removeProject.bind(this)
-//     )
-//   }
-
-//   submitProject() {
-//     if (this.projectNameInput.value !== '') {
-//       this.inputValue = this.projectNameInput.value
-
-//       this.projectNameInput.style.display = 'none'
-//       this.addingProjectButton.style.display = 'none'
-//       this.removeProjectAfterSubmit.style.display = 'block'
-//       this.deleteProjectButton.remove()
-//       this.projectNameInput.remove()
-//       this.addingProjectButton.remove()
-
-//       this.displaySpan.style.display = 'block'
-//       this.addListButton.style.display = 'inline-block'
-//       projectStorage.addProject(this.inputValue)
-//     }
-//   }
-
-//   createList() {
-//     //-----
-
-//     // -------
-
-//     //---
-
-//     this.icon = document.createElement('i')
-//     this.icon.classList.add('fa-solid', 'fa-xmark')
-//     this.deleteListButton.appendChild(this.icon)
-
-//     this.listDiv.appendChild(this.deleteListButton)
-//     this.listDiv.style.display = 'none'
-//     this.listContainer.appendChild(this.listInput)
-//     this.listContainer.appendChild(this.addingListButton)
-//     this.listContainer.appendChild(this.listDiv)
-//     this.listContainer.appendChild(this.deleteListInput)
-//     this.project.appendChild(this.listContainer)
-//   }
-// }
