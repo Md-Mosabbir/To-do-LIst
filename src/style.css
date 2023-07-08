@@ -13,8 +13,7 @@
 }
 html,
 body {
-  height: 100vh;
-  height: 100svh;
+  height: 100%;
 }
 
 #back-button {
